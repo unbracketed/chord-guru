@@ -1,10 +1,27 @@
 /** @jsx React.DOM */
 
+var ChordResults = React.createClass({
+
+  render: function(){
+    // Don't escape the SVG
+    return (
+      <div dangerouslySetInnerHTML={{__html: this.props.result}}></div>
+    );
+  }
+});
+
 var ChordBuilder = React.createClass({
+
+    getInitialState: function(){
+      return {
+        result: ""
+      }
+    },
 
     handleTonicClick: function(event) {
 
-        cname = event.target.id;
+        var cname = event.target.id;
+        var component = this;
 
         // TODO move to common
         request = new XMLHttpRequest;
@@ -14,9 +31,7 @@ var ChordBuilder = React.createClass({
           if (request.status >= 200 && request.status < 400){
             // Success!
             resp = request.responseText;
-
-            var content = document.querySelectorAll('#content')[0];
-            content.insertAdjacentHTML('afterend', resp);
+            component.setState({result: resp});
           } else {
             // We reached our target server, but it returned an error
 
@@ -37,6 +52,7 @@ var ChordBuilder = React.createClass({
             <div className="chordBuilder">
                 <button id="A" onClick={this.handleTonicClick}>A</button>
                 <button id="C" onClick={this.handleTonicClick}>C</button>
+                <ChordResults ref="resultsSection" result={this.state.result} />
             </div>
         );
     }
