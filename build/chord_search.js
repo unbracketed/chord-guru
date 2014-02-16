@@ -4,8 +4,9 @@ var ChordBuilder = React.createClass({displayName: 'ChordBuilder',
 
     handleTonicClick: function(event) {
 
+        cname = event.target.id;
         request = new XMLHttpRequest;
-        request.open('GET', 'http://localhost:8000/data/guitar/chords/A-1.svg', true);
+        request.open('GET', 'http://localhost:8000/data/guitar/chords/' + cname + '-1.svg', true);
 
         request.onload = function() {
           if (request.status >= 200 && request.status < 400){
@@ -32,7 +33,8 @@ var ChordBuilder = React.createClass({displayName: 'ChordBuilder',
     render: function() {
         return (
             React.DOM.div( {className:"chordBuilder"}, 
-                React.DOM.a( {href:"#", onClick:this.handleTonicClick}, "A")
+                React.DOM.a( {href:"A", id:"A", onClick:this.handleTonicClick}, "A"),
+                React.DOM.a( {href:"C", id:"C", onClick:this.handleTonicClick}, "C")
             )
         );
     }
