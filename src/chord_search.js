@@ -5,6 +5,8 @@ var ChordBuilder = React.createClass({
     handleTonicClick: function(event) {
 
         cname = event.target.id;
+
+        // TODO move to common
         request = new XMLHttpRequest;
         request.open('GET', 'http://localhost:8000/data/guitar/chords/' + cname + '-1.svg', true);
 
@@ -33,8 +35,8 @@ var ChordBuilder = React.createClass({
     render: function() {
         return (
             <div className="chordBuilder">
-                <a href="A" id="A" onClick={this.handleTonicClick}>A</a>
-                <a href="C" id="C" onClick={this.handleTonicClick}>C</a>
+                <button id="A" onClick={this.handleTonicClick}>A</button>
+                <button id="C" onClick={this.handleTonicClick}>C</button>
             </div>
         );
     }
@@ -42,21 +44,9 @@ var ChordBuilder = React.createClass({
 });
 
 var ChordFinder = React.createClass({
-
-    getInitialState: function() {
-        return {searchTerm: ''};
-    },
-
-    handleChange: function(event) {
-        this.setState({searchTerm: event.target.value});
-    },
-
     render: function() {
-        var searchTerm = this.state.searchTerm;
         return (
             <div className="chordSearch">
-                Find a chord:
-                <input type="text" value={searchTerm} onChange={this.handleChange} />
                 <ChordBuilder/>
             </div>
         );
