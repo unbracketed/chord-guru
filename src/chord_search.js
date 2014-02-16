@@ -3,6 +3,29 @@
 var ChordBuilder = React.createClass({
 
     handleTonicClick: function(event) {
+
+        request = new XMLHttpRequest;
+        request.open('GET', 'http://localhost:8000/data/guitar/chords/A-1.svg', true);
+
+        request.onload = function() {
+          if (request.status >= 200 && request.status < 400){
+            // Success!
+            resp = request.responseText;
+
+            var content = document.querySelectorAll('#content')[0];
+            content.insertAdjacentHTML('afterend', resp);
+          } else {
+            // We reached our target server, but it returned an error
+
+          }
+        };
+
+        request.onerror = function() {
+          // There was a connection error of some sort
+        };
+
+      request.send();
+
         return false;
     },
 
