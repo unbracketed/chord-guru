@@ -25,7 +25,7 @@ var ChordBuilder = React.createClass({
 
         // TODO move to common
         request = new XMLHttpRequest;
-        request.open('GET', 'http://localhost:8000/data/guitar/chords/' + cname + '-1.svg', true);
+        request.open('GET', '/data/guitar/chords/' + cname + '-1.svg', true);
 
         request.onload = function() {
           if (request.status >= 200 && request.status < 400){
@@ -52,7 +52,7 @@ var ChordBuilder = React.createClass({
             <div className="chordBuilder">
                 <button id="A" onClick={this.handleTonicClick}>A</button>
                 <button id="C" onClick={this.handleTonicClick}>C</button>
-                <ChordResults ref="resultsSection" result={this.state.result} />
+                <ChordResults result={this.state.result} />
             </div>
         );
     }
