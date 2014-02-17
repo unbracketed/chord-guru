@@ -1,0 +1,14 @@
+{
+    "name": "F",
+    "notes": ["F", "A", "C"],
+    "fingerings": [
+        [
+            {"fret": "1", "finger": 1},
+            {"fret": "1", "finger": 1},
+            {"fret": "2", "finger": 2},
+            {"fret": "3", "finger": 4},
+            {"fret": "3", "finger": 3},
+            {"fret": "1", "finger": 1}
+        ]
+    ]
+}

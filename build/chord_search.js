@@ -51,7 +51,12 @@ var ChordBuilder = React.createClass({displayName: 'ChordBuilder',
         return (
             React.DOM.div( {className:"chordBuilder"}, 
                 React.DOM.button( {id:"A", onClick:this.handleTonicClick}, "A"),
+                React.DOM.button( {id:"B", onClick:this.handleTonicClick}, "B"),
                 React.DOM.button( {id:"C", onClick:this.handleTonicClick}, "C"),
+                React.DOM.button( {id:"D", onClick:this.handleTonicClick}, "D"),
+                React.DOM.button( {id:"E", onClick:this.handleTonicClick}, "E"),
+                React.DOM.button( {id:"F", onClick:this.handleTonicClick}, "F"),
+                React.DOM.button( {id:"G", onClick:this.handleTonicClick}, "G"),
                 ChordResults( {result:this.state.result} )
             )
         );
