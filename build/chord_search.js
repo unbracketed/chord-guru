@@ -4,9 +4,17 @@ var ChordResults = React.createClass({displayName: 'ChordResults',
 
   render: function(){
     // Don't escape the SVG
-    return (
-      React.DOM.div( {dangerouslySetInnerHTML:{__html: this.props.result}})
-    );
+    if (this.props.result){
+      return (
+        React.DOM.div(null, 
+          React.DOM.div( {dangerouslySetInnerHTML:{__html: this.props.result}}),
+          React.DOM.button( {onClick:this.props.addToCollection}, "Add to Collection")
+        )
+      );
+    }
+    else {
+      return (React.DOM.div(null));
+    }
   }
 });
 
@@ -47,6 +55,10 @@ var ChordBuilder = React.createClass({displayName: 'ChordBuilder',
         return false;
     },
 
+    addToCollection: function(event){
+      alert('you');
+    },
+
     render: function() {
         return (
             React.DOM.div( {className:"chordBuilder"}, 
@@ -57,7 +69,7 @@ var ChordBuilder = React.createClass({displayName: 'ChordBuilder',
                 React.DOM.button( {id:"E", onClick:this.handleTonicClick}, "E"),
                 React.DOM.button( {id:"F", onClick:this.handleTonicClick}, "F"),
                 React.DOM.button( {id:"G", onClick:this.handleTonicClick}, "G"),
-                ChordResults( {result:this.state.result} )
+                ChordResults( {result:this.state.result, addToCollection:this.addToCollection} )
             )
         );
     }
