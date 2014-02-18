@@ -33,7 +33,7 @@ var ChordBuilder = React.createClass({
 
         // TODO move to common
         request = new XMLHttpRequest;
-        request.open('GET', '/data/guitar/chords/' + cname + '-1.svg', true);
+        request.open('GET', 'assets/chord_data/guitar/chords/' + cname + '-1.svg', true);
 
         request.onload = function() {
           if (request.status >= 200 && request.status < 400){

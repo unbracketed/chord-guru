@@ -1,4 +1,6 @@
 .ipynb_checkpoints
 node_modules
-build/.module-cache
-build/.lock.pid
+build
+
+#hoodie couchdb location
+data
