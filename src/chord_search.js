@@ -56,7 +56,13 @@ var ChordBuilder = React.createClass({
     },
 
     addToCollection: function(event){
-      alert('you');
+      hoodie.store.add('mycollection', {title: 'hello'})
+                .done(function (newObject) {
+                  alert('done');
+                }).fail(function(info){
+                  alert('fail');
+                });
+      return false;
     },
 
     render: function() {
@@ -77,6 +83,17 @@ var ChordBuilder = React.createClass({
 });
 
 var ChordFinder = React.createClass({
+
+    componentDidMount: function(){
+      hoodie.store
+        .findAll('mycollection')
+        .done(function(items){
+          items.forEach(
+            function(item){alert(item.title);}
+          );
+        });
+    },
+
     render: function() {
         return (
             <div className="chordSearch">
@@ -86,6 +103,8 @@ var ChordFinder = React.createClass({
     }
 });
 
+
+var hoodie  = new Hoodie();
 
 React.renderComponent(
   <ChordFinder/>,
