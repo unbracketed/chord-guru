@@ -6,7 +6,11 @@
     "hoodie-server": "0.9.13",
     "hoodie-plugin-appconfig": "~0.1.0",
     "hoodie-plugin-email": "~0.1.1",
-    "hoodie-plugin-users": "0.1.0"
+    "hoodie-plugin-users": "0.1.0",
+    "react": "~0.9.0-rc1",
+    "browserify": "~3.30.1",
+    "reactify": "~0.7.0",
+    "react-bootstrap": "~0.4.2"
   },
   "subdomain": "hoodie-chord-guru",
   "domains": [

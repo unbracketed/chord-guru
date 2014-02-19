@@ -1,5 +1,9 @@
 /** @jsx React.DOM */
 
+var React = require('react');
+var Button = require('react-bootstrap/cjs/Button');
+
+
 var ChordResults = React.createClass({
 
   render: function(){
@@ -68,13 +72,13 @@ var ChordBuilder = React.createClass({
     render: function() {
         return (
             <div className="chordBuilder">
-                <button id="A" onClick={this.handleTonicClick}>A</button>
-                <button id="B" onClick={this.handleTonicClick}>B</button>
-                <button id="C" onClick={this.handleTonicClick}>C</button>
-                <button id="D" onClick={this.handleTonicClick}>D</button>
-                <button id="E" onClick={this.handleTonicClick}>E</button>
-                <button id="F" onClick={this.handleTonicClick}>F</button>
-                <button id="G" onClick={this.handleTonicClick}>G</button>
+                <Button id="A" onClick={this.handleTonicClick}>A</Button>
+                <Button id="B" onClick={this.handleTonicClick}>B</Button>
+                <Button id="C" onClick={this.handleTonicClick}>C</Button>
+                <Button id="D" onClick={this.handleTonicClick}>D</Button>
+                <Button id="E" onClick={this.handleTonicClick}>E</Button>
+                <Button id="F" onClick={this.handleTonicClick}>F</Button>
+                <Button id="G" onClick={this.handleTonicClick}>G</Button>
                 <ChordResults result={this.state.result} addToCollection={this.addToCollection} />
             </div>
         );
