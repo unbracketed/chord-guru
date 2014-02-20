@@ -16865,7 +16865,10 @@ var ChordResults = React.createClass({displayName: 'ChordResults',
       return (
         React.DOM.div(null, 
           React.DOM.div( {dangerouslySetInnerHTML:{__html: this.props.result}}),
-          React.DOM.button( {onClick:this.props.app.addToCollection, name:this.props.name, 'data-chord-fingering':this.props.fingering}, "Add to Collection")
+          React.DOM.button(
+            {onClick:this.props.app.addToCollection,
+            name:this.props.name,
+            'data-chord-fingering':this.props.fingering}, "Add to New Collection")
         )
       );
     }
@@ -16884,17 +16887,17 @@ var ChordBuilder = React.createClass({displayName: 'ChordBuilder',
         result: "",
         key: "",
         fingering: 0,
-        currentCollection: false
       }
     },
 
     handleKeyClick: function(event) {
 
 
+        //TODO switch to bind?
         var keyName = event.target.name;
         var component = this;
 
-        // TODO move to common
+        // TODO switch to jquery
         request = new XMLHttpRequest;
         request.open('GET', 'assets/chord_data/guitar/chords/' + keyName + '-1.svg', true);
 
@@ -16923,6 +16926,7 @@ var ChordBuilder = React.createClass({displayName: 'ChordBuilder',
     },
 
     render: function() {
+        //TODO using map http://facebook.github.io/react/tips/communicate-between-components.html
         return (
             React.DOM.div( {className:"col-md-8"}, 
                 Button( {onClick:this.handleKeyClick, name:'A'}, "A"),
@@ -16949,28 +16953,51 @@ var ChordBuilder = React.createClass({displayName: 'ChordBuilder',
 
 });
 
+
+var ChordCollections = React.createClass({displayName: 'ChordCollections',
+  //TODO init user collections
+  render: function(){
+    return (
+      React.DOM.div( {className:"col-md-4"}, 
+        React.DOM.h2(null, "Collections"),
+        React.DOM.p(null, "Create collections of chords for study, practice, or reference")
+      )
+    );
+  }
+});
+
+
 var ChordApp = React.createClass({displayName: 'ChordApp',
 
     getInitialState: function(){
       return {
-        userCollections: []
+        userCollections: [],
+        currentCollection: false
       }
     },
 
     componentDidMount: function(){
-      component = this;
+      var component = this;
       hoodie.store
-        .findAll('userCollections')
-        .done(function(items){
+        .findAll('collections')
+        .done(function(collections){
+          console.log('Found user collections:');
+          console.log(collections[0]);
           component.setState({
-            userCollections: items
-          });
+            userCollections: collections[0]
+          })
+        })
+        .fail(function(err){
+          console.log(err);
         });
     },
 
     addToCurrentCollection: function() {
+
+      //TODO get rid of these via bind?
       var keyName = event.target.name;
       var fId = $(event.target).data('chord-fingering');
+
       var curColl = this.state.currentCollection;
 
       //is there a current collection?
@@ -16981,15 +17008,25 @@ var ChordApp = React.createClass({displayName: 'ChordApp',
         };
 
         //update User Collections
-        hoodie.store.add('userCollections', [curColl]);
-        this.setState({currentCollection: curColl});
-
-        //add to UI
-        this.props.children;
+        hoodie.store.add('collections', {items: [curColl]})
+          .done(function(newObject){
+            console.log("Added new user collection: " + curColl.name);
+            console.log(newObject);
+          })
+          .fail(function(err){
+            console.log(err);
+          });
+        this.setState({
+          currentCollection: curColl,
+          userCollections: [curColl]
+        });
       }
 
       hoodie.store.add(curColl.slug, {key: keyName, fingering: fId})
-          .done(this.addedToCollection)
+          .done(function(newObject){
+            console.log("Added to collection: " + curColl.name);
+            console.log(newObject);
+          })
           .fail(function(err){
             console.log(err);
           });
@@ -16997,33 +17034,21 @@ var ChordApp = React.createClass({displayName: 'ChordApp',
       return false;
     },
 
-    addedToCollection: function(newObject){
-      console.log("Added to collection " + this.state.currentCollection.name);
-      console.log(newObject);
-    },
-
     render: function() {
       return (
           React.DOM.div( {className:"row"}, 
               ChordBuilder( {app:{addToCollection: this.addToCurrentCollection}} ),
-              Collections( {ref:"user-collections"} )
+              ChordCollections( {ref:"userCollections", collections:this.state.userCollections} )
           )
       );
     }
 });
 
-
-var Collections = React.createClass({displayName: 'Collections',
-
-  render: function(){
-    return (
-      React.DOM.div( {className:"col-md-4"}, 
-        React.DOM.h2(null, "Collections"),
-        React.DOM.p(null, "Create collections of chords for study, practice, or reference")
-      )
-    );
-  }
-});
+//TODO
+// split components separate files
+// user integration
+// live reload - gulp
+// inline svg rendering
 
 var hoodie  = new Hoodie();
 
