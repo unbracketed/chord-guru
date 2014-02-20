@@ -16865,38 +16865,48 @@ var ChordResults = React.createClass({displayName: 'ChordResults',
       return (
         React.DOM.div(null, 
           React.DOM.div( {dangerouslySetInnerHTML:{__html: this.props.result}}),
-          React.DOM.button( {onClick:this.props.addToCollection}, "Add to Collection")
+          React.DOM.button( {onClick:this.props.app.addToCollection, name:this.props.name, 'data-chord-fingering':this.props.fingering}, "Add to Collection")
         )
       );
     }
     else {
-      return (React.DOM.div(null));
+      return (React.DOM.div( {className:"row"}));
     }
   }
 });
 
 var ChordBuilder = React.createClass({displayName: 'ChordBuilder',
 
+    //keys: ['A', 'A#/Bb', 'B', 'C', 'C#/Db', 'D', 'D#/Eb', 'E', 'F', 'F#/Gb', 'G', 'G#/Ab'],
+
     getInitialState: function(){
       return {
-        result: ""
+        result: "",
+        key: "",
+        fingering: 0,
+        currentCollection: false
       }
     },
 
-    handleTonicClick: function(event) {
+    handleKeyClick: function(event) {
 
-        var cname = event.target.id;
+
+        var keyName = event.target.name;
         var component = this;
 
         // TODO move to common
         request = new XMLHttpRequest;
-        request.open('GET', 'assets/chord_data/guitar/chords/' + cname + '-1.svg', true);
+        request.open('GET', 'assets/chord_data/guitar/chords/' + keyName + '-1.svg', true);
 
         request.onload = function() {
           if (request.status >= 200 && request.status < 400){
             // Success!
             resp = request.responseText;
-            component.setState({result: resp});
+            component.setState({
+              result: resp,
+              fingering: 1,
+              key: keyName
+            });
           } else {
             // We reached our target server, but it returned an error
 
@@ -16907,64 +16917,118 @@ var ChordBuilder = React.createClass({displayName: 'ChordBuilder',
           // There was a connection error of some sort
         };
 
-      request.send();
+        request.send();
 
         return false;
     },
 
-    addToCollection: function(event){
-      hoodie.store.add('mycollection', {title: 'hello'})
-                .done(function (newObject) {
-                  alert('done');
-                }).fail(function(info){
-                  alert('fail');
-                });
-      return false;
-    },
-
     render: function() {
         return (
-            React.DOM.div( {className:"chordBuilder"}, 
-                Button( {id:"A", class:"btn btn-small", onClick:this.handleTonicClick}, "A"),
-                Button( {id:"B", onClick:this.handleTonicClick}, "B"),
-                Button( {id:"C", onClick:this.handleTonicClick}, "C"),
-                Button( {id:"D", onClick:this.handleTonicClick}, "D"),
-                Button( {id:"E", onClick:this.handleTonicClick}, "E"),
-                Button( {id:"F", onClick:this.handleTonicClick}, "F"),
-                Button( {id:"G", onClick:this.handleTonicClick}, "G"),
-                ChordResults( {result:this.state.result, addToCollection:this.addToCollection} )
+            React.DOM.div( {className:"col-md-8"}, 
+                Button( {onClick:this.handleKeyClick, name:'A'}, "A"),
+                Button( {onClick:this.handleKeyClick, name:'A#/Bb'}, "A#/Bb"),
+                Button( {onClick:this.handleKeyClick, name:'B'}, "B"),
+                Button( {onClick:this.handleKeyClick, name:'C'}, "C"),
+                Button( {onClick:this.handleKeyClick, name:'C#/Db'}, "C#/Db"),
+                Button( {onClick:this.handleKeyClick, name:'D'}, "D"),
+                Button( {onClick:this.handleKeyClick, name:'D#/Eb'}, "D#/Eb"),
+                Button( {onClick:this.handleKeyClick, name:'E'}, "E"),
+                Button( {onClick:this.handleKeyClick, name:'F'}, "F"),
+                Button( {onClick:this.handleKeyClick, name:'F#/Gb'}, "F#/Gb"),
+                Button( {onClick:this.handleKeyClick, name:'G'}, "G"),
+                Button( {onClick:this.handleKeyClick, name:'G#/Ab'}, "G#/Ab"),
+                ChordResults(
+                  {app:this.props.app,
+                  name:this.state.key,
+                  fingering:this.state.fingering,
+                  result:this.state.result}
+                )
             )
         );
     }
 
 });
 
-var ChordFinder = React.createClass({displayName: 'ChordFinder',
+var ChordApp = React.createClass({displayName: 'ChordApp',
+
+    getInitialState: function(){
+      return {
+        userCollections: []
+      }
+    },
 
     componentDidMount: function(){
+      component = this;
       hoodie.store
-        .findAll('mycollection')
+        .findAll('userCollections')
         .done(function(items){
-          items.forEach(
-            function(item){alert(item.title);}
-          );
+          component.setState({
+            userCollections: items
+          });
         });
     },
 
+    addToCurrentCollection: function() {
+      var keyName = event.target.name;
+      var fId = $(event.target).data('chord-fingering');
+      var curColl = this.state.currentCollection;
+
+      //is there a current collection?
+      if (!curColl){
+        curColl = {
+          name: "New Collection",
+          slug: 'newcollection'
+        };
+
+        //update User Collections
+        hoodie.store.add('userCollections', [curColl]);
+        this.setState({currentCollection: curColl});
+
+        //add to UI
+        this.props.children;
+      }
+
+      hoodie.store.add(curColl.slug, {key: keyName, fingering: fId})
+          .done(this.addedToCollection)
+          .fail(function(err){
+            console.log(err);
+          });
+
+      return false;
+    },
+
+    addedToCollection: function(newObject){
+      console.log("Added to collection " + this.state.currentCollection.name);
+      console.log(newObject);
+    },
+
     render: function() {
-        return (
-            React.DOM.div( {className:"chordSearch"}, 
-                ChordBuilder(null)
-            )
-        );
+      return (
+          React.DOM.div( {className:"row"}, 
+              ChordBuilder( {app:{addToCollection: this.addToCurrentCollection}} ),
+              Collections( {ref:"user-collections"} )
+          )
+      );
     }
 });
 
+
+var Collections = React.createClass({displayName: 'Collections',
+
+  render: function(){
+    return (
+      React.DOM.div( {className:"col-md-4"}, 
+        React.DOM.h2(null, "Collections"),
+        React.DOM.p(null, "Create collections of chords for study, practice, or reference")
+      )
+    );
+  }
+});
 
 var hoodie  = new Hoodie();
 
 React.renderComponent(
-  ChordFinder(null),
+  ChordApp(null),
   document.getElementById('content')
 );
 },{"react":136,"react-bootstrap/cjs/Button":1}],138:[function(require,module,exports){
