@@ -39,36 +39,17 @@ var ChordBuilder = React.createClass({
 
     handleKeyClick: function(event) {
 
-
         //TODO switch to bind?
         var keyName = event.target.name;
         var component = this;
 
-        // TODO switch to jquery
-        request = new XMLHttpRequest;
-        request.open('GET', 'assets/chord_data/guitar/chords/' + keyName + '-1.svg', true);
-
-        request.onload = function() {
-          if (request.status >= 200 && request.status < 400){
-            // Success!
-            resp = request.responseText;
+        $.get('assets/chord_data/guitar/chords/' + keyName + '-1.svg', function(data, textStatus, jqXHR){
             component.setState({
-              result: resp,
+              result: data,
               fingering: 1,
               key: keyName
             });
-          } else {
-            // We reached our target server, but it returned an error
-
-          }
-        };
-
-        request.onerror = function() {
-          // There was a connection error of some sort
-        };
-
-        request.send();
-
+        }, 'text');
         return false;
     },
 
@@ -153,6 +134,8 @@ var ChordApp = React.createClass({
           name: "New Collection",
           slug: 'newcollection'
         };
+
+        //TODO creating duplicates of collections
 
         //update User Collections
         hoodie.store.add('collections', {items: [curColl]})
