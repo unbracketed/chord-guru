@@ -16880,7 +16880,7 @@ var ChordResults = React.createClass({displayName: 'ChordResults',
 
 var ChordBuilder = React.createClass({displayName: 'ChordBuilder',
 
-    //keys: ['A', 'A#/Bb', 'B', 'C', 'C#/Db', 'D', 'D#/Eb', 'E', 'F', 'F#/Gb', 'G', 'G#/Ab'],
+    keys: ['A', 'A#/Bb', 'B', 'C', 'C#/Db', 'D', 'D#/Eb', 'E', 'F', 'F#/Gb', 'G', 'G#/Ab'],
 
     getInitialState: function(){
       return {
@@ -16892,12 +16892,9 @@ var ChordBuilder = React.createClass({displayName: 'ChordBuilder',
 
     handleKeyClick: function(event) {
 
-
         //TODO switch to bind?
         var keyName = event.target.name;
         var component = this;
-
-        // TODO switch to jquery
 
         $.get('assets/chord_data/guitar/chords/' + keyName + '-1.svg', function(data, textStatus, jqXHR){
             component.setState({
@@ -16910,27 +16907,18 @@ var ChordBuilder = React.createClass({displayName: 'ChordBuilder',
     },
 
     render: function() {
-        //TODO using map http://facebook.github.io/react/tips/communicate-between-components.html
         return (
             React.DOM.div( {className:"col-md-8"}, 
-                Button( {onClick:this.handleKeyClick, name:'A'}, "A"),
-                Button( {onClick:this.handleKeyClick, name:'A#/Bb'}, "A#/Bb"),
-                Button( {onClick:this.handleKeyClick, name:'B'}, "B"),
-                Button( {onClick:this.handleKeyClick, name:'C'}, "C"),
-                Button( {onClick:this.handleKeyClick, name:'C#/Db'}, "C#/Db"),
-                Button( {onClick:this.handleKeyClick, name:'D'}, "D"),
-                Button( {onClick:this.handleKeyClick, name:'D#/Eb'}, "D#/Eb"),
-                Button( {onClick:this.handleKeyClick, name:'E'}, "E"),
-                Button( {onClick:this.handleKeyClick, name:'F'}, "F"),
-                Button( {onClick:this.handleKeyClick, name:'F#/Gb'}, "F#/Gb"),
-                Button( {onClick:this.handleKeyClick, name:'G'}, "G"),
-                Button( {onClick:this.handleKeyClick, name:'G#/Ab'}, "G#/Ab"),
-                ChordResults(
-                  {app:this.props.app,
-                  name:this.state.key,
-                  fingering:this.state.fingering,
-                  result:this.state.result}
-                )
+              this.keys.map(function(keyname, i) {
+                return (
+                  Button( {onClick:this.handleKeyClick, name:this.keys[i], key:i}, this.keys[i])
+                );
+              }, this),
+              ChordResults(
+                {app:this.props.app,
+                name:this.state.key,
+                fingering:this.state.fingering,
+                result:this.state.result} )
             )
         );
     }
@@ -16990,6 +16978,8 @@ var ChordApp = React.createClass({displayName: 'ChordApp',
           name: "New Collection",
           slug: 'newcollection'
         };
+
+        //TODO creating duplicates of collections
 
         //update User Collections
         hoodie.store.add('collections', {items: [curColl]})

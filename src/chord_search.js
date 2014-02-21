@@ -27,7 +27,7 @@ var ChordResults = React.createClass({
 
 var ChordBuilder = React.createClass({
 
-    //keys: ['A', 'A#/Bb', 'B', 'C', 'C#/Db', 'D', 'D#/Eb', 'E', 'F', 'F#/Gb', 'G', 'G#/Ab'],
+    keys: ['A', 'A#/Bb', 'B', 'C', 'C#/Db', 'D', 'D#/Eb', 'E', 'F', 'F#/Gb', 'G', 'G#/Ab'],
 
     getInitialState: function(){
       return {
@@ -54,27 +54,18 @@ var ChordBuilder = React.createClass({
     },
 
     render: function() {
-        //TODO using map http://facebook.github.io/react/tips/communicate-between-components.html
         return (
             <div className="col-md-8">
-                <Button onClick={this.handleKeyClick} name={'A'}>A</Button>
-                <Button onClick={this.handleKeyClick} name={'A#/Bb'}>A#/Bb</Button>
-                <Button onClick={this.handleKeyClick} name={'B'}>B</Button>
-                <Button onClick={this.handleKeyClick} name={'C'}>C</Button>
-                <Button onClick={this.handleKeyClick} name={'C#/Db'}>C#/Db</Button>
-                <Button onClick={this.handleKeyClick} name={'D'}>D</Button>
-                <Button onClick={this.handleKeyClick} name={'D#/Eb'}>D#/Eb</Button>
-                <Button onClick={this.handleKeyClick} name={'E'}>E</Button>
-                <Button onClick={this.handleKeyClick} name={'F'}>F</Button>
-                <Button onClick={this.handleKeyClick} name={'F#/Gb'}>F#/Gb</Button>
-                <Button onClick={this.handleKeyClick} name={'G'}>G</Button>
-                <Button onClick={this.handleKeyClick} name={'G#/Ab'}>G#/Ab</Button>
-                <ChordResults
-                  app={this.props.app}
-                  name={this.state.key}
-                  fingering={this.state.fingering}
-                  result={this.state.result}
-                />
+              {this.keys.map(function(keyname, i) {
+                return (
+                  <Button onClick={this.handleKeyClick} name={this.keys[i]} key={i}>{this.keys[i]}</Button>
+                );
+              }, this)}
+              <ChordResults
+                app={this.props.app}
+                name={this.state.key}
+                fingering={this.state.fingering}
+                result={this.state.result} />
             </div>
         );
     }
