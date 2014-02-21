@@ -2,6 +2,9 @@
 
 var React = require('react');
 var Button = require('react-bootstrap/cjs/Button');
+var Nav = require('react-bootstrap/cjs/Nav');
+var NavItem = require('react-bootstrap/cjs/NavItem');
+
 
 
 var ChordResults = React.createClass({
@@ -12,10 +15,9 @@ var ChordResults = React.createClass({
       return (
         <div>
           <div dangerouslySetInnerHTML={{__html: this.props.result}}></div>
-          <button
-            onClick={this.props.app.addToCollection}
-            name={this.props.name}
-            data-chord-fingering={this.props.fingering}>Add to New Collection</button>
+          <Button
+            onClick={this.props.app.addToCurrentCollection.bind(null, this.props.name, this.props.fingering)}
+          >Add to New Collection</Button>
         </div>
       );
     }
@@ -37,17 +39,13 @@ var ChordBuilder = React.createClass({
       }
     },
 
-    handleKeyClick: function(event) {
-
-        //TODO switch to bind?
-        var keyName = event.target.name;
+    handleKeyClick: function(keyname) {
         var component = this;
-
-        $.get('assets/chord_data/guitar/chords/' + keyName + '-1.svg', function(data, textStatus, jqXHR){
+        $.get('assets/chord_data/guitar/chords/' + keyname + '-1.svg', function(data, textStatus, jqXHR){
             component.setState({
               result: data,
               fingering: 1,
-              key: keyName
+              key: keyname
             });
         }, 'text');
         return false;
@@ -58,7 +56,7 @@ var ChordBuilder = React.createClass({
             <div className="col-md-8">
               {this.keys.map(function(keyname, i) {
                 return (
-                  <Button onClick={this.handleKeyClick} name={this.keys[i]} key={i}>{this.keys[i]}</Button>
+                  <Button onClick={this.handleKeyClick.bind(this, keyname)} key={i}>{keyname}</Button>
                 );
               }, this)}
               <ChordResults
@@ -74,12 +72,17 @@ var ChordBuilder = React.createClass({
 
 
 var ChordCollections = React.createClass({
-  //TODO init user collections
   render: function(){
+    var infoStyle = this.props.collections.length ? {display: 'none'} : {};
     return (
       <div className="col-md-4">
         <h2>Collections</h2>
-        <p>Create collections of chords for study, practice, or reference</p>
+        <p style={infoStyle}>Create collections of chords for study, practice, or reference</p>
+        <Nav bsStyle="pills" bsVariation="stacked" activeKey={1} onSelect={this.handleSelect}>
+        {this.props.collections.map(function(coll, i){
+          return(<NavItem key={1} title={coll.name}>{coll.name}</NavItem>);
+        }, this)}
+      </Nav>
       </div>
     );
   }
@@ -100,22 +103,30 @@ var ChordApp = React.createClass({
       hoodie.store
         .findAll('collections')
         .done(function(collections){
-          console.log('Found user collections:');
-          console.log(collections[0]);
-          component.setState({
-            userCollections: collections[0]
-          })
+          if (collections.length){
+            console.log('Found user collections:');
+            console.log(collections[0]);
+            component.setState({
+              userCollections: collections[0].items
+            });
+          }
+          else{
+            console.log('No user collections found');
+            component.setState({
+              userCollections: []
+            });
+          }
         })
         .fail(function(err){
           console.log(err);
         });
     },
 
-    addToCurrentCollection: function() {
+    addToCurrentCollection: function(keyname, fingering) {
 
       //TODO get rid of these via bind?
-      var keyName = event.target.name;
-      var fId = $(event.target).data('chord-fingering');
+      // var keyname = event.target.name;
+      // var fId = $(event.target).data('chord-fingering');
 
       var curColl = this.state.currentCollection;
 
@@ -143,7 +154,7 @@ var ChordApp = React.createClass({
         });
       }
 
-      hoodie.store.add(curColl.slug, {key: keyName, fingering: fId})
+      hoodie.store.add(curColl.slug, {key: keyname, fingering: fingering})
           .done(function(newObject){
             console.log("Added to collection: " + curColl.name);
             console.log(newObject);
@@ -158,7 +169,7 @@ var ChordApp = React.createClass({
     render: function() {
       return (
           <div className="row">
-              <ChordBuilder app={{addToCollection: this.addToCurrentCollection}} />
+              <ChordBuilder app={{addToCurrentCollection: this.addToCurrentCollection}} />
               <ChordCollections ref="userCollections" collections={this.state.userCollections} />
           </div>
       );
@@ -166,6 +177,7 @@ var ChordApp = React.createClass({
 });
 
 //TODO
+// move to index.html
 // split components separate files
 // user integration
 // live reload - gulp
