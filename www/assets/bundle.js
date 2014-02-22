@@ -17767,18 +17767,76 @@ var ChordResults = React.createClass({displayName: 'ChordResults',
   render: function(){
     // Don't escape the SVG
     if (this.props.result){
-      return (
-        React.DOM.div(null, 
-          React.DOM.div( {dangerouslySetInnerHTML:{__html: this.props.result}}),
-          Button(
-            {onClick:this.props.app.addToCurrentCollection.bind(null, this.props.name, this.props.fingering)}
-          , "Add to New Collection")
-        )
-      );
+      // return (
+      //   <div>
+      //     <div dangerouslySetInnerHTML={{__html: this.props.result}}></div>
+      //     <Button
+      //       onClick={this.props.app.addToCurrentCollection.bind(null, this.props.name, this.props.fingering)}
+      //     >Add to New Collection</Button>
+      //   </div>
+      // );
+      return ChordDiagram(null );
     }
     else {
       return (React.DOM.div( {className:"row"}));
     }
+  }
+});
+
+var ChordDiagram = React.createClass({displayName: 'ChordDiagram',
+  render: function(){
+    //svg baseProfile full
+    //svg  xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xlink="http://www.w3.org/1999/xlink"
+
+    //TODO these should be determined from the data
+    var strings = [1,2,3,4,5,6];
+    var frets = [1,2,3,4];
+
+    //TODO these should be determined from props
+    var width = 400;
+    var height = 400;
+    var openMutedHeight = 30;
+
+    var colWidth = width / strings.length;
+    var stringOffset = colWidth / 2;
+    var fretHeight = (height - openMutedHeight) / frets.length;
+
+    return (
+      React.DOM.svg( {height:400, width:height, version:"1.1", xmlns:"http://www.w3.org/2000/svg"} , 
+
+        /* open / muted indicators */
+        React.DOM.text( {x:"0", y:"20"}, "X"),React.DOM.text( {x:"500", y:"20"}, "O"),
+        React.DOM.text( {x:"300", y:"20"}, "O"),
+
+        /* strings */
+        strings.map(function(string, i){
+          return(
+            React.DOM.line(
+              {stroke:"black",
+              x1:stringOffset + (i*colWidth),
+              x2:stringOffset + (i*colWidth),
+              y1:"30",
+              y2:"400"}
+            ));
+        }, this),
+
+        /* frets */
+
+        frets.map(function(fret, i){
+          return(
+            React.DOM.line(
+              {stroke:"black",
+              x1:stringOffset,
+              x2:width - stringOffset,
+              y1:openMutedHeight + i*fretHeight,
+              y2:openMutedHeight + i*fretHeight}
+            )
+          );
+        }, this),
+        React.DOM.circle( {cx:"200", cy:"175", r:"30"}),
+        React.DOM.circle( {cx:"100", cy:"275", r:"30"})
+      )
+    );
   }
 });
 
