@@ -17782,7 +17782,7 @@ var ChordDiagram = React.createClass({displayName: 'ChordDiagram',
     var height = frets.length * fretHeight + openMutedHeight;
     var stringOffset = colWidth / 2;
     //TODO make percentage based
-    var textTopOffset = 20;
+    var textTopOffset = openMutedHeight * 0.5;
     var textRightOffset = 5;
 
     var radius = (colWidth/2) * 0.75;
@@ -17796,7 +17796,9 @@ var ChordDiagram = React.createClass({displayName: 'ChordDiagram',
             return (
               React.DOM.text(
                 {x:(stringOffset + (5-i)*colWidth) - textRightOffset,
-                y:textTopOffset}, 
+                y:textTopOffset,
+                'font-size':textTopOffset}
+              , 
               string.fret == 'open' ? 'O' : 'X'
               ));
           }
