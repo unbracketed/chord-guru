@@ -17787,6 +17787,7 @@ var ChordDiagram = React.createClass({displayName: 'ChordDiagram',
 
     var radius = (colWidth/2) * 0.75;
     var openRadius = openMutedHeight * 0.3;
+    var openMutedStrokeWidth = width > 100 ? 2 : 1;
 
     return (
       React.DOM.svg( {height:height, width:width, version:"1.1", xmlns:"http://www.w3.org/2000/svg"} , 
@@ -17802,40 +17803,29 @@ var ChordDiagram = React.createClass({displayName: 'ChordDiagram',
                 r:openRadius,
                 fill:"white",
                 stroke:"black",
-                strokeWidth:"2",
+                strokeWidth:openMutedStrokeWidth,
                 key:'open-' + i}
               )
               );
             }
             else {
               return (React.DOM.g(null, 
-                [1,2].map(function(val, i){
-                  if (i == 1){
-                   return (
-                     React.DOM.line(
-                      {stroke:"black",
-                      x1:(stringOffset + (5-i)*colWidth)-openRadius,
-                      x2:(stringOffset + (5-i)*colWidth)+openRadius,
-                      y1:openMutedHeight/2 - openRadius,
-                      y2:openMutedHeight/2 + openRadius,
-                      key:'muted-' + i}
-                    )
-                   );
-
-                  }
-                  else {
-                    return (
-                      React.DOM.line(
-                        {stroke:"black",
-                        x1:(stringOffset + (5-i)*colWidth)-openRadius,
-                        x2:(stringOffset + (5-i)*colWidth)+openRadius,
-                        y1:openMutedHeight/2 - openRadius,
-                        y2:openMutedHeight/2 + openRadius,
-                        key:'muted-' + i}
-                      )
-                    );
-                  }
-                }, this)
+                React.DOM.line(
+                  {stroke:"black",
+                  strokeWidth:openMutedStrokeWidth,
+                  x1:(stringOffset + (5-i)*colWidth)-openRadius,
+                  x2:(stringOffset + (5-i)*colWidth)+openRadius,
+                  y1:openMutedHeight/2 - openRadius,
+                  y2:openMutedHeight/2 + openRadius}
+                ),
+                React.DOM.line(
+                  {stroke:"black",
+                  strokeWidth:openMutedStrokeWidth,
+                  x1:(stringOffset + (5-i)*colWidth)+openRadius,
+                  x2:(stringOffset + (5-i)*colWidth)-openRadius,
+                  y1:openMutedHeight/2 - openRadius,
+                  y2:openMutedHeight/2 + openRadius}
+                )
               ));
             }
           }
