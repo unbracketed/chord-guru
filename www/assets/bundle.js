@@ -17697,13 +17697,13 @@ var ChordBuilder = React.createClass({displayName: 'ChordBuilder',
 
     handleKeyClick: function(keyname) {
         var component = this;
-        $.get('assets/chord_data/guitar/chords/' + keyname + '-1.svg', function(data, textStatus, jqXHR){
+        $.get('assets/chord_data/guitar/chords/' + keyname + '.json', function(data, textStatus, jqXHR){
             component.setState({
               result: data,
               fingering: 1,
               key: keyname
             });
-        }, 'text');
+        }, 'json');
         return false;
     },
 
@@ -17765,17 +17765,8 @@ var Button = require('react-bootstrap/cjs/Button');
 var ChordResults = React.createClass({displayName: 'ChordResults',
 
   render: function(){
-    // Don't escape the SVG
     if (this.props.result){
-      // return (
-      //   <div>
-      //     <div dangerouslySetInnerHTML={{__html: this.props.result}}></div>
-      //     <Button
-      //       onClick={this.props.app.addToCurrentCollection.bind(null, this.props.name, this.props.fingering)}
-      //     >Add to New Collection</Button>
-      //   </div>
-      // );
-      return ChordDiagram(null );
+      return ChordDiagram( {chord_data:this.props.result} );
     }
     else {
       return (React.DOM.div( {className:"row"}));
@@ -17784,12 +17775,17 @@ var ChordResults = React.createClass({displayName: 'ChordResults',
 });
 
 var ChordDiagram = React.createClass({displayName: 'ChordDiagram',
-  render: function(){
-    //svg baseProfile full
-    //svg  xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xlink="http://www.w3.org/1999/xlink"
 
-    //TODO these should be determined from the data
-    var strings = [1,2,3,4,5,6];
+  getFret: function(info){
+    if (info.fret == 'open' || info.fret == 'muted')
+      return false;
+    return parseInt(info.fret, 10);
+  },
+
+  render: function(){
+
+    var strings = this.props.chord_data.fingerings[0];
+    //TODO determine from data
     var frets = [1,2,3,4];
 
     //TODO these should be determined from props
@@ -17816,12 +17812,13 @@ var ChordDiagram = React.createClass({displayName: 'ChordDiagram',
               x1:stringOffset + (i*colWidth),
               x2:stringOffset + (i*colWidth),
               y1:"30",
-              y2:"400"}
-            ));
+              y2:"400",
+              key:i}
+            )
+          );
         }, this),
 
         /* frets */
-
         frets.map(function(fret, i){
           return(
             React.DOM.line(
@@ -17833,8 +17830,16 @@ var ChordDiagram = React.createClass({displayName: 'ChordDiagram',
             )
           );
         }, this),
-        React.DOM.circle( {cx:"200", cy:"175", r:"30"}),
-        React.DOM.circle( {cx:"100", cy:"275", r:"30"})
+
+        /* finger down marks */
+        strings.map(function(string, i){
+          var fret = this.getFret(string);
+          if (fret){
+            return (
+              React.DOM.circle( {cx:stringOffset + (5-i)*colWidth, cy:openMutedHeight + (fret*fretHeight - fretHeight/2), r:"30", key:i})
+            );
+          }
+        }, this)
       )
     );
   }

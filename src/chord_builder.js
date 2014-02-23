@@ -19,13 +19,13 @@ var ChordBuilder = React.createClass({
 
     handleKeyClick: function(keyname) {
         var component = this;
-        $.get('assets/chord_data/guitar/chords/' + keyname + '-1.svg', function(data, textStatus, jqXHR){
+        $.get('assets/chord_data/guitar/chords/' + keyname + '.json', function(data, textStatus, jqXHR){
             component.setState({
               result: data,
               fingering: 1,
               key: keyname
             });
-        }, 'text');
+        }, 'json');
         return false;
     },
 
