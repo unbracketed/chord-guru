@@ -17775,18 +17775,20 @@ var ChordDiagram = React.createClass({displayName: 'ChordDiagram',
     //TODO determine from data
     var frets = [1,2,3,4];
 
-    //TODO make percentage based
-    var openMutedHeight = 30;
-
-    var colWidth = this.props.width / strings.length;
+    var width = this.props.width;
+    var colWidth = width / strings.length;
+    var fretHeight = colWidth;
+    var openMutedHeight = fretHeight * 0.3;
+    var height = frets.length * fretHeight + openMutedHeight;
     var stringOffset = colWidth / 2;
-    var fretHeight = (this.props.height - openMutedHeight) / frets.length;
     //TODO make percentage based
     var textTopOffset = 20;
     var textRightOffset = 5;
 
+    var radius = (colWidth/2) * 0.75;
+
     return (
-      React.DOM.svg( {height:this.props.height, width:this.props.width, version:"1.1", xmlns:"http://www.w3.org/2000/svg"} , 
+      React.DOM.svg( {height:height, width:width, version:"1.1", xmlns:"http://www.w3.org/2000/svg"} , 
 
         /* open / muted indicators */
         strings.map(function(string, i){
@@ -17807,8 +17809,8 @@ var ChordDiagram = React.createClass({displayName: 'ChordDiagram',
               {stroke:"black",
               x1:stringOffset + (i*colWidth),
               x2:stringOffset + (i*colWidth),
-              y1:"30",
-              y2:"400",
+              y1:openMutedHeight,
+              y2:height,
               key:i}
             )
           );
@@ -17820,7 +17822,7 @@ var ChordDiagram = React.createClass({displayName: 'ChordDiagram',
             React.DOM.line(
               {stroke:"black",
               x1:stringOffset,
-              x2:this.props.width - stringOffset,
+              x2:width - stringOffset,
               y1:openMutedHeight + i*fretHeight,
               y2:openMutedHeight + i*fretHeight}
             )
@@ -17835,7 +17837,7 @@ var ChordDiagram = React.createClass({displayName: 'ChordDiagram',
               React.DOM.circle(
                 {cx:stringOffset + (5-i)*colWidth,
                 cy:openMutedHeight + (fret*fretHeight - fretHeight/2),
-                r:"30",
+                r:radius,
                 key:i}
               )
             );
@@ -17860,17 +17862,20 @@ var ChordDiagram = require('./chord_diagram.js')
 var ChordResults = React.createClass({displayName: 'ChordResults',
 
   render: function(){
-    if (this.props.result){
-      return (
+
+      var test = [500, 450, 400, 300, 200, 100, 75, 50, 25];
+      return (React.DOM.div(null, test.map(function(a, i){
+
+        return (React.DOM.div(null, this.props.result ?
         ChordDiagram(
           {chord_data:this.props.result,
-          height:500,
-          width:600} )
-      );
-    }
-    else {
-      return (React.DOM.div( {className:"row"}));
-    }
+          width:a,
+          key:i} )
+          : React.DOM.div(null))
+        );
+
+        }, this),"); "
+      ));
   }
 });
 

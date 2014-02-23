@@ -8,17 +8,20 @@ var ChordDiagram = require('./chord_diagram.js')
 var ChordResults = React.createClass({
 
   render: function(){
-    if (this.props.result){
-      return (
+
+      var test = [500, 450, 400, 300, 200, 100, 75, 50, 25];
+      return (<div>{test.map(function(a, i){
+
+        return (<div>{this.props.result ?
         <ChordDiagram
           chord_data={this.props.result}
-          height={500}
-          width={600} />
-      );
-    }
-    else {
-      return (<div className="row"></div>);
-    }
+          width={a}
+          key={i} />
+          : <div></div>}</div>
+        );
+
+        }, this)});
+      </div>);
   }
 });
 

@@ -17,18 +17,20 @@ var ChordDiagram = React.createClass({
     //TODO determine from data
     var frets = [1,2,3,4];
 
-    //TODO make percentage based
-    var openMutedHeight = 30;
-
-    var colWidth = this.props.width / strings.length;
+    var width = this.props.width;
+    var colWidth = width / strings.length;
+    var fretHeight = colWidth;
+    var openMutedHeight = fretHeight * 0.3;
+    var height = frets.length * fretHeight + openMutedHeight;
     var stringOffset = colWidth / 2;
-    var fretHeight = (this.props.height - openMutedHeight) / frets.length;
     //TODO make percentage based
     var textTopOffset = 20;
     var textRightOffset = 5;
 
+    var radius = (colWidth/2) * 0.75;
+
     return (
-      <svg height={this.props.height} width={this.props.width} version="1.1" xmlns="http://www.w3.org/2000/svg" >
+      <svg height={height} width={width} version="1.1" xmlns="http://www.w3.org/2000/svg" >
 
         {/* open / muted indicators */}
         {strings.map(function(string, i){
@@ -49,8 +51,8 @@ var ChordDiagram = React.createClass({
               stroke="black"
               x1={stringOffset + (i*colWidth)}
               x2={stringOffset + (i*colWidth)}
-              y1="30"
-              y2="400"
+              y1={openMutedHeight}
+              y2={height}
               key={i}>
             </line>
           );
@@ -62,7 +64,7 @@ var ChordDiagram = React.createClass({
             <line
               stroke="black"
               x1={stringOffset}
-              x2={this.props.width - stringOffset}
+              x2={width - stringOffset}
               y1={openMutedHeight + i*fretHeight}
               y2={openMutedHeight + i*fretHeight}>
             </line>
@@ -77,7 +79,7 @@ var ChordDiagram = React.createClass({
               <circle
                 cx={stringOffset + (5-i)*colWidth}
                 cy={openMutedHeight + (fret*fretHeight - fretHeight/2)}
-                r="30"
+                r={radius}
                 key={i}>
               </circle>
             );
