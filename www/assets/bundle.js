@@ -17791,18 +17791,30 @@ var ChordDiagram = React.createClass({displayName: 'ChordDiagram',
     //TODO these should be determined from props
     var width = 400;
     var height = 400;
+    //TODO make percentage based
     var openMutedHeight = 30;
 
     var colWidth = width / strings.length;
     var stringOffset = colWidth / 2;
     var fretHeight = (height - openMutedHeight) / frets.length;
+    //TODO make percentage based
+    var textTopOffset = 20;
+    var textRightOffset = 5;
 
     return (
       React.DOM.svg( {height:400, width:height, version:"1.1", xmlns:"http://www.w3.org/2000/svg"} , 
 
         /* open / muted indicators */
-        React.DOM.text( {x:"0", y:"20"}, "X"),React.DOM.text( {x:"500", y:"20"}, "O"),
-        React.DOM.text( {x:"300", y:"20"}, "O"),
+        strings.map(function(string, i){
+          if (string.fret == 'open' || string.fret == 'muted'){
+            return (
+              React.DOM.text(
+                {x:(stringOffset + (5-i)*colWidth) - textRightOffset,
+                y:textTopOffset}, 
+              string.fret == 'open' ? 'O' : 'X'
+              ));
+          }
+        }, this),
 
         /* strings */
         strings.map(function(string, i){
@@ -17836,7 +17848,12 @@ var ChordDiagram = React.createClass({displayName: 'ChordDiagram',
           var fret = this.getFret(string);
           if (fret){
             return (
-              React.DOM.circle( {cx:stringOffset + (5-i)*colWidth, cy:openMutedHeight + (fret*fretHeight - fretHeight/2), r:"30", key:i})
+              React.DOM.circle(
+                {cx:stringOffset + (5-i)*colWidth,
+                cy:openMutedHeight + (fret*fretHeight - fretHeight/2),
+                r:"30",
+                key:i}
+              )
             );
           }
         }, this)
