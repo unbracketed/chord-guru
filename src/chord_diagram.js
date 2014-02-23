@@ -20,7 +20,7 @@ var ChordDiagram = React.createClass({
     var width = this.props.width;
     var colWidth = width / strings.length;
     var fretHeight = colWidth;
-    var openMutedHeight = fretHeight * 0.3;
+    var openMutedHeight = fretHeight * 0.5;
     var height = frets.length * fretHeight + openMutedHeight;
     var stringOffset = colWidth / 2;
     //TODO make percentage based
@@ -28,6 +28,7 @@ var ChordDiagram = React.createClass({
     var textRightOffset = 5;
 
     var radius = (colWidth/2) * 0.75;
+    var openRadius = openMutedHeight * 0.3;
 
     return (
       <svg height={height} width={width} version="1.1" xmlns="http://www.w3.org/2000/svg" >
@@ -35,14 +36,50 @@ var ChordDiagram = React.createClass({
         {/* open / muted indicators */}
         {strings.map(function(string, i){
           if (string.fret == 'open' || string.fret == 'muted'){
-            return (
-              <text
-                x={(stringOffset + (5-i)*colWidth) - textRightOffset}
-                y={textTopOffset}
-                font-size={textTopOffset}
-              >
-              {string.fret == 'open' ? 'O' : 'X'}
-              </text>);
+            if (string.fret == 'open'){
+              return (
+                <circle
+                cx={stringOffset + (5-i)*colWidth}
+                cy={openMutedHeight / 2}
+                r={openRadius}
+                fill='white'
+                stroke='black'
+                strokeWidth='2'
+                key={'open-' + i}>
+              </circle>
+              );
+            }
+            else {
+              return (<g>
+                {[1,2].map(function(val, i){
+                  if (i == 1){
+                   return (
+                     <line
+                      stroke="black"
+                      x1={(stringOffset + (5-i)*colWidth)-openRadius}
+                      x2={(stringOffset + (5-i)*colWidth)+openRadius}
+                      y1={openMutedHeight/2 - openRadius}
+                      y2={openMutedHeight/2 + openRadius}
+                      key={'muted-' + i}>
+                    </line>
+                   );
+
+                  }
+                  else {
+                    return (
+                      <line
+                        stroke="black"
+                        x1={(stringOffset + (5-i)*colWidth)-openRadius}
+                        x2={(stringOffset + (5-i)*colWidth)+openRadius}
+                        y1={openMutedHeight/2 - openRadius}
+                        y2={openMutedHeight/2 + openRadius}
+                        key={'muted-' + i}>
+                      </line>
+                    );
+                  }
+                }, this)}
+              </g>);
+            }
           }
         }, this)}
 

@@ -17778,7 +17778,7 @@ var ChordDiagram = React.createClass({displayName: 'ChordDiagram',
     var width = this.props.width;
     var colWidth = width / strings.length;
     var fretHeight = colWidth;
-    var openMutedHeight = fretHeight * 0.3;
+    var openMutedHeight = fretHeight * 0.5;
     var height = frets.length * fretHeight + openMutedHeight;
     var stringOffset = colWidth / 2;
     //TODO make percentage based
@@ -17786,6 +17786,7 @@ var ChordDiagram = React.createClass({displayName: 'ChordDiagram',
     var textRightOffset = 5;
 
     var radius = (colWidth/2) * 0.75;
+    var openRadius = openMutedHeight * 0.3;
 
     return (
       React.DOM.svg( {height:height, width:width, version:"1.1", xmlns:"http://www.w3.org/2000/svg"} , 
@@ -17793,14 +17794,50 @@ var ChordDiagram = React.createClass({displayName: 'ChordDiagram',
         /* open / muted indicators */
         strings.map(function(string, i){
           if (string.fret == 'open' || string.fret == 'muted'){
-            return (
-              React.DOM.text(
-                {x:(stringOffset + (5-i)*colWidth) - textRightOffset,
-                y:textTopOffset,
-                'font-size':textTopOffset}
-              , 
-              string.fret == 'open' ? 'O' : 'X'
+            if (string.fret == 'open'){
+              return (
+                React.DOM.circle(
+                {cx:stringOffset + (5-i)*colWidth,
+                cy:openMutedHeight / 2,
+                r:openRadius,
+                fill:"white",
+                stroke:"black",
+                strokeWidth:"2",
+                key:'open-' + i}
+              )
+              );
+            }
+            else {
+              return (React.DOM.g(null, 
+                [1,2].map(function(val, i){
+                  if (i == 1){
+                   return (
+                     React.DOM.line(
+                      {stroke:"black",
+                      x1:(stringOffset + (5-i)*colWidth)-openRadius,
+                      x2:(stringOffset + (5-i)*colWidth)+openRadius,
+                      y1:openMutedHeight/2 - openRadius,
+                      y2:openMutedHeight/2 + openRadius,
+                      key:'muted-' + i}
+                    )
+                   );
+
+                  }
+                  else {
+                    return (
+                      React.DOM.line(
+                        {stroke:"black",
+                        x1:(stringOffset + (5-i)*colWidth)-openRadius,
+                        x2:(stringOffset + (5-i)*colWidth)+openRadius,
+                        y1:openMutedHeight/2 - openRadius,
+                        y2:openMutedHeight/2 + openRadius,
+                        key:'muted-' + i}
+                      )
+                    );
+                  }
+                }, this)
               ));
+            }
           }
         }, this),
 
