@@ -17692,7 +17692,6 @@ var ChordBuilder = React.createClass({displayName: 'ChordBuilder',
         display_name: 'A',
         major: [
           '02220X-011100',
-          'XX11XX'
         ],
         minor: [
           '01220X'
@@ -17971,11 +17970,13 @@ var ChordResults = React.createClass({displayName: 'ChordResults',
 
   render: function(){
     if (this.props.result){
+      var footer = Button( {onClick:this.props.app.addToCurrentCollection}, "Add to Collection");
       return (
         React.DOM.div(null, 
           React.DOM.h2(null, this.props.resultTitle),
           ChordList(
-            {chord_list:this.props.result})
+            {chord_list:this.props.result,
+            footer:footer})
         )
       );
     }
@@ -17987,14 +17988,29 @@ var ChordResults = React.createClass({displayName: 'ChordResults',
 
 
 var ChordList = React.createClass({displayName: 'ChordList',
+  getDefaultProps: function(){
+    return {
+      footer: false
+    }
+  },
+
   render: function(){
     return (
       React.DOM.div(null, 
         this.props.chord_list.map(function(chord, idx){
-          return(ChordDiagram(
-            {chord_data:chord,
-            width:500,
-            key:'chord-diagram-'+idx} ));
+          var footer = this.props.footer;
+          if (footer){
+            footer.props.onClick.bind(null, chord);
+          }
+          return(
+            React.DOM.div(null, 
+              ChordDiagram(
+                {chord_data:chord,
+                width:500,
+                key:'chord-diagram-'+idx} ),
+              footer
+            )
+          );
         } ,this)
       )
     );

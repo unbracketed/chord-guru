@@ -9,11 +9,13 @@ var ChordResults = React.createClass({
 
   render: function(){
     if (this.props.result){
+      var footer = <Button onClick={this.props.app.addToCurrentCollection}>Add to Collection</Button>;
       return (
         <div>
           <h2>{this.props.resultTitle}</h2>
           <ChordList
-            chord_list={this.props.result}/>
+            chord_list={this.props.result}
+            footer={footer}/>
         </div>
       );
     }
@@ -25,14 +27,29 @@ var ChordResults = React.createClass({
 
 
 var ChordList = React.createClass({
+  getDefaultProps: function(){
+    return {
+      footer: false
+    }
+  },
+
   render: function(){
     return (
       <div>
         {this.props.chord_list.map(function(chord, idx){
-          return(<ChordDiagram
-            chord_data={chord}
-            width={500}
-            key={'chord-diagram-'+idx} />);
+          var footer = this.props.footer;
+          if (footer){
+            footer.props.onClick.bind(null, chord);
+          }
+          return(
+            <div>
+              <ChordDiagram
+                chord_data={chord}
+                width={500}
+                key={'chord-diagram-'+idx} />
+              {footer}
+            </div>
+          );
         } ,this)}
       </div>
     );
