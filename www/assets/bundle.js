@@ -17685,7 +17685,79 @@ var ChordResults = require('./chord_results');
 
 var ChordBuilder = React.createClass({displayName: 'ChordBuilder',
 
-    keys: ['A', 'A#/Bb', 'B', 'C', 'C#/Db', 'D', 'D#/Eb', 'E', 'F', 'F#/Gb', 'G', 'G#/Ab'],
+    // guitar data
+    // TODO unicode flat/sharp
+    chord_data: {
+      A: {
+        display_name: 'A',
+        major: [
+          '02220X-011100'
+        ],
+        minor: [
+          '01220X'
+        ]
+      },
+      Bflat: {
+        display_name: 'A#/Bb',
+        major: [
+          '1330XX-143000'
+        ]
+      },
+      B: {
+        display_name: 'B',
+        major: [
+          '24442X-133311'
+        ]
+      },
+      C: {
+        display_name: 'C',
+        major: [
+          '01023X-010230'
+        ]
+      },
+      Csharp: {
+        display_name: 'C#/Db',
+        major: [
+          '12134X-121340'
+        ]
+      },
+      D: {
+        display_name: 'D',
+        major: [
+          '2320XX'
+        ]
+      },
+      Eflat: {
+        display_name: 'D#/Eb',
+        major: [
+          '3431XX-342100'
+        ]
+      },
+      E:  {
+        display_name: 'E',
+        major: [
+          '001220'
+        ]
+      },
+      F: {
+        display_name: 'F',
+        major: [
+          '112331'
+        ]
+      },
+      Fsharp: {
+        display_name: 'F#/Gb',
+        major: [
+          '223442-112431'
+        ]
+      },
+      G: {
+        display_name: 'G',
+        major: [
+          '300023'
+        ]
+      },
+    },
 
     getInitialState: function(){
       return {
@@ -17696,23 +17768,16 @@ var ChordBuilder = React.createClass({displayName: 'ChordBuilder',
     },
 
     handleKeyClick: function(keyname) {
-        var component = this;
-        $.get('assets/chord_data/guitar/chords/' + keyname + '.json', function(data, textStatus, jqXHR){
-            component.setState({
-              result: data,
-              fingering: 1,
-              key: keyname
-            });
-        }, 'json');
+        this.setState({key: keyname, result: this.chord_data[keyname].major})
         return false;
     },
 
     render: function() {
         return (
             React.DOM.div( {className:"col-md-8"}, 
-              this.keys.map(function(keyname, i) {
+              Object.keys(this.chord_data).map(function(keyname, i) {
                 return (
-                  Button( {onClick:this.handleKeyClick.bind(this, keyname), key:i}, keyname)
+                  Button( {onClick:this.handleKeyClick.bind(this, keyname), key:i}, this.chord_data[keyname].display_name)
                 );
               }, this),
               ChordResults(
@@ -17764,14 +17829,26 @@ var React = require('react');
 var ChordDiagram = React.createClass({displayName: 'ChordDiagram',
 
   getFret: function(info){
-    if (info.fret == 'open' || info.fret == 'muted')
+    if (info == '0' || info == 'X')
       return false;
-    return parseInt(info.fret, 10);
+    return parseInt(info, 10);
   },
 
   render: function(){
 
-    var strings = this.props.chord_data.fingerings[0];
+    var _info = this.props.chord_data[0];
+    parts = _info.split("-");
+    var frets_info = parts[0];
+    var strings = [
+      frets_info[0],
+      frets_info[1],
+      frets_info[2],
+      frets_info[3],
+      frets_info[4],
+      frets_info[5]];
+
+    // var strings = this.props.chord_data[0];
+
     //TODO determine from data
     var frets = [1,2,3,4];
 
@@ -17794,8 +17871,8 @@ var ChordDiagram = React.createClass({displayName: 'ChordDiagram',
 
         /* open / muted indicators */
         strings.map(function(string, i){
-          if (string.fret == 'open' || string.fret == 'muted'){
-            if (string.fret == 'open'){
+          if (string == '0' || string == 'X'){
+            if (string == '0'){
               return (
                 React.DOM.circle(
                 {cx:stringOffset + (5-i)*colWidth,
@@ -17891,20 +17968,16 @@ var ChordDiagram = require('./chord_diagram.js')
 var ChordResults = React.createClass({displayName: 'ChordResults',
 
   render: function(){
-
-      var test = [500, 450, 400, 300, 200, 100, 75, 50, 25];
-      return (React.DOM.div(null, test.map(function(a, i){
-
-        return (React.DOM.div(null, this.props.result ?
-        ChordDiagram(
-          {chord_data:this.props.result,
-          width:a,
-          key:i} )
-          : React.DOM.div(null))
-        );
-
-        }, this),"); "
-      ));
+    if (this.props.result)
+      return (
+          ChordDiagram(
+            {chord_data:this.props.result,
+            width:500}
+          )
+      );
+    else {
+      return (React.DOM.div(null));
+    }
   }
 });
 

@@ -6,14 +6,26 @@ var React = require('react');
 var ChordDiagram = React.createClass({
 
   getFret: function(info){
-    if (info.fret == 'open' || info.fret == 'muted')
+    if (info == '0' || info == 'X')
       return false;
-    return parseInt(info.fret, 10);
+    return parseInt(info, 10);
   },
 
   render: function(){
 
-    var strings = this.props.chord_data.fingerings[0];
+    var _info = this.props.chord_data[0];
+    parts = _info.split("-");
+    var frets_info = parts[0];
+    var strings = [
+      frets_info[0],
+      frets_info[1],
+      frets_info[2],
+      frets_info[3],
+      frets_info[4],
+      frets_info[5]];
+
+    // var strings = this.props.chord_data[0];
+
     //TODO determine from data
     var frets = [1,2,3,4];
 
@@ -36,8 +48,8 @@ var ChordDiagram = React.createClass({
 
         {/* open / muted indicators */}
         {strings.map(function(string, i){
-          if (string.fret == 'open' || string.fret == 'muted'){
-            if (string.fret == 'open'){
+          if (string == '0' || string == 'X'){
+            if (string == '0'){
               return (
                 <circle
                 cx={stringOffset + (5-i)*colWidth}
