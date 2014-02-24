@@ -12,9 +12,16 @@ var ChordCollections = React.createClass({
       <div className="col-md-4">
         <h2>Collections</h2>
         <p style={infoStyle}>Create collections of chords for study, practice, or reference</p>
-        <Nav bsStyle="pills" bsVariation="stacked" activeKey={1} onSelect={this.handleSelect}>
+        <Nav bsStyle="pills" bsVariation="stacked" activeKey={'collection-0'} onSelect={this.handleSelect}>
         {this.props.collections.map(function(coll, i){
-          return(<NavItem key={1} title={coll.name}>{coll.name}</NavItem>);
+          return(
+            <NavItem
+              key={'collection-'+i}
+              title={coll.name}
+              onClick={this.props.app.showCollectionDetail.bind(null, coll)}
+            >
+              {coll.name}
+            </NavItem>);
         }, this)}
       </Nav>
       </div>

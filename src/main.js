@@ -3,7 +3,7 @@
 var React = require('react');
 var Button = require('react-bootstrap/cjs/Button');
 
-var ChordResults = require('./chord_results');
+var chord_results = require('./chord_results');
 var ChordCollections = require('./chord_collections');
 var ChordBuilder = require('./chord_builder');
 
@@ -13,7 +13,8 @@ var ChordApp = React.createClass({
     getInitialState: function(){
       return {
         userCollections: [],
-        currentCollection: false
+        currentCollection: false,
+        activeView: 'chord-builder'
       }
     },
 
@@ -24,16 +25,20 @@ var ChordApp = React.createClass({
         .done(function(collections){
           if (collections.length){
             console.log('Found user collections:');
-            console.log(collections[0]);
+            console.log(collections);
+
+            // TODO find latest collection and make it current
+
             component.setState({
-              userCollections: collections[0].items
+              userCollections: collections,
+              currentCollection: collections[0]
             });
           }
           else{
             console.log('No user collections found');
-            component.setState({
-              userCollections: []
-            });
+            // component.setState({
+            //   userCollections: []
+            // });
           }
         })
         .fail(function(err){
@@ -41,7 +46,7 @@ var ChordApp = React.createClass({
         });
     },
 
-    addToCurrentCollection: function(keyname, fingering) {
+    addToCurrentCollection: function(chord) {
 
       var curColl = this.state.currentCollection;
 
@@ -49,14 +54,17 @@ var ChordApp = React.createClass({
       if (!curColl){
         curColl = {
           name: "New Collection",
-          slug: 'newcollection'
+          items: []
         };
 
-        //update User Collections
-        hoodie.store.add('collections', {items: [curColl]})
+        curColl.items.push(chord);
+
+        //create default User Collection
+        hoodie.store.add('collections', curColl)
           .done(function(newObject){
             console.log("Added new user collection: " + curColl.name);
             console.log(newObject);
+            curColl = newObject;
           })
           .fail(function(err){
             console.log(err);
@@ -66,33 +74,60 @@ var ChordApp = React.createClass({
           userCollections: [curColl]
         });
       }
-
-      hoodie.store.add(curColl.slug, {key: keyname, fingering: fingering})
-          .done(function(newObject){
-            console.log("Added to collection: " + curColl.name);
-            console.log(newObject);
-          })
-          .fail(function(err){
-            console.log(err);
-          });
+      else {
+        curColl.items.push(chord);
+        hoodie.store.update('collections', curColl.id, {items: curColl.items});
+        this.setState({
+          currentCollection: curColl,
+        });
+      }
 
       return false;
     },
 
+    showCollectionDetail: function(collection){
+      this.setState({
+        activeView: 'collectionDetail',
+        currentCollection: collection
+      });
+      return false;
+    },
+
     render: function() {
-      return (
+
+      var app = {
+        addToCurrentCollection: this.addToCurrentCollection,
+        showCollectionDetail: this.showCollectionDetail
+      };
+      var ChordList = chord_results.ChordList;
+
+      if (this.state.activeView == 'collectionDetail'){
+        return (
+            <div className="row">
+              {this.state.currentCollection.name}
+
+              <ChordList app={app} chord_list={this.state.currentCollection.items} />
+            </div>
+        );
+      }
+      else {
+        return (
           <div className="row">
-              <ChordBuilder app={{addToCurrentCollection: this.addToCurrentCollection}} />
-              <ChordCollections ref="userCollections" collections={this.state.userCollections} />
+            <ChordBuilder app={app} />
+            <ChordCollections
+              ref="userCollections"
+              app={app}
+              collections={this.state.userCollections} />
           </div>
-      );
+        );
+      }
     }
 });
 
 //TODO
 // user integration
 // live reload - gulp
-// inline svg rendering
+// use store events to keep app reactive
 
 var hoodie  = new Hoodie();
 

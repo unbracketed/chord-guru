@@ -17680,7 +17680,7 @@ module.exports = require('./lib/React');
 
 var React = require('react');
 var Button = require('react-bootstrap/cjs/Button');
-var ChordResults = require('./chord_results');
+var ChordResults = require('./chord_results').ChordResults;
 
 
 var ChordBuilder = React.createClass({displayName: 'ChordBuilder',
@@ -17808,9 +17808,16 @@ var ChordCollections = React.createClass({displayName: 'ChordCollections',
       React.DOM.div( {className:"col-md-4"}, 
         React.DOM.h2(null, "Collections"),
         React.DOM.p( {style:infoStyle}, "Create collections of chords for study, practice, or reference"),
-        Nav( {bsStyle:"pills", bsVariation:"stacked", activeKey:1, onSelect:this.handleSelect}, 
+        Nav( {bsStyle:"pills", bsVariation:"stacked", activeKey:'collection-0', onSelect:this.handleSelect}, 
         this.props.collections.map(function(coll, i){
-          return(NavItem( {key:1, title:coll.name}, coll.name));
+          return(
+            NavItem(
+              {key:'collection-'+i,
+              title:coll.name,
+              onClick:this.props.app.showCollectionDetail.bind(null, coll)}
+            , 
+              coll.name
+            ));
         }, this)
       )
       )
@@ -17970,13 +17977,12 @@ var ChordResults = React.createClass({displayName: 'ChordResults',
 
   render: function(){
     if (this.props.result){
-      var footer = Button( {onClick:this.props.app.addToCurrentCollection}, "Add to Collection");
       return (
         React.DOM.div(null, 
           React.DOM.h2(null, this.props.resultTitle),
           ChordList(
-            {chord_list:this.props.result,
-            footer:footer})
+            {app:this.props.app,
+            chord_list:this.props.result} )
         )
       );
     }
@@ -17998,17 +18004,13 @@ var ChordList = React.createClass({displayName: 'ChordList',
     return (
       React.DOM.div(null, 
         this.props.chord_list.map(function(chord, idx){
-          var footer = this.props.footer;
-          if (footer){
-            footer.props.onClick.bind(null, chord);
-          }
           return(
             React.DOM.div(null, 
               ChordDiagram(
                 {chord_data:chord,
                 width:500,
                 key:'chord-diagram-'+idx} ),
-              footer
+                Button( {onClick:this.props.app.addToCurrentCollection.bind(null, chord)}, "Add to Collection")
             )
           );
         } ,this)
@@ -18017,7 +18019,8 @@ var ChordList = React.createClass({displayName: 'ChordList',
   }
 });
 
-module.exports = ChordResults;
+exports.ChordResults = ChordResults;
+exports.ChordList = ChordList;
 
 },{"./chord_diagram.js":154,"react":151,"react-bootstrap/cjs/Button":1}],156:[function(require,module,exports){
 /** @jsx React.DOM */
@@ -18025,7 +18028,7 @@ module.exports = ChordResults;
 var React = require('react');
 var Button = require('react-bootstrap/cjs/Button');
 
-var ChordResults = require('./chord_results');
+var chord_results = require('./chord_results');
 var ChordCollections = require('./chord_collections');
 var ChordBuilder = require('./chord_builder');
 
@@ -18035,7 +18038,8 @@ var ChordApp = React.createClass({displayName: 'ChordApp',
     getInitialState: function(){
       return {
         userCollections: [],
-        currentCollection: false
+        currentCollection: false,
+        activeView: 'chord-builder'
       }
     },
 
@@ -18046,16 +18050,20 @@ var ChordApp = React.createClass({displayName: 'ChordApp',
         .done(function(collections){
           if (collections.length){
             console.log('Found user collections:');
-            console.log(collections[0]);
+            console.log(collections);
+
+            // TODO find latest collection and make it current
+
             component.setState({
-              userCollections: collections[0].items
+              userCollections: collections,
+              currentCollection: collections[0]
             });
           }
           else{
             console.log('No user collections found');
-            component.setState({
-              userCollections: []
-            });
+            // component.setState({
+            //   userCollections: []
+            // });
           }
         })
         .fail(function(err){
@@ -18063,7 +18071,7 @@ var ChordApp = React.createClass({displayName: 'ChordApp',
         });
     },
 
-    addToCurrentCollection: function(keyname, fingering) {
+    addToCurrentCollection: function(chord) {
 
       var curColl = this.state.currentCollection;
 
@@ -18071,14 +18079,17 @@ var ChordApp = React.createClass({displayName: 'ChordApp',
       if (!curColl){
         curColl = {
           name: "New Collection",
-          slug: 'newcollection'
+          items: []
         };
 
-        //update User Collections
-        hoodie.store.add('collections', {items: [curColl]})
+        curColl.items.push(chord);
+
+        //create default User Collection
+        hoodie.store.add('collections', curColl)
           .done(function(newObject){
             console.log("Added new user collection: " + curColl.name);
             console.log(newObject);
+            curColl = newObject;
           })
           .fail(function(err){
             console.log(err);
@@ -18088,33 +18099,60 @@ var ChordApp = React.createClass({displayName: 'ChordApp',
           userCollections: [curColl]
         });
       }
-
-      hoodie.store.add(curColl.slug, {key: keyname, fingering: fingering})
-          .done(function(newObject){
-            console.log("Added to collection: " + curColl.name);
-            console.log(newObject);
-          })
-          .fail(function(err){
-            console.log(err);
-          });
+      else {
+        curColl.items.push(chord);
+        hoodie.store.update('collections', curColl.id, {items: curColl.items});
+        this.setState({
+          currentCollection: curColl,
+        });
+      }
 
       return false;
     },
 
+    showCollectionDetail: function(collection){
+      this.setState({
+        activeView: 'collectionDetail',
+        currentCollection: collection
+      });
+      return false;
+    },
+
     render: function() {
-      return (
+
+      var app = {
+        addToCurrentCollection: this.addToCurrentCollection,
+        showCollectionDetail: this.showCollectionDetail
+      };
+      var ChordList = chord_results.ChordList;
+
+      if (this.state.activeView == 'collectionDetail'){
+        return (
+            React.DOM.div( {className:"row"}, 
+              this.state.currentCollection.name,
+
+              ChordList( {app:app, chord_list:this.state.currentCollection.items} )
+            )
+        );
+      }
+      else {
+        return (
           React.DOM.div( {className:"row"}, 
-              ChordBuilder( {app:{addToCurrentCollection: this.addToCurrentCollection}} ),
-              ChordCollections( {ref:"userCollections", collections:this.state.userCollections} )
+            ChordBuilder( {app:app} ),
+            ChordCollections(
+              {ref:"userCollections",
+              app:app,
+              collections:this.state.userCollections} )
           )
-      );
+        );
+      }
     }
 });
 
 //TODO
 // user integration
 // live reload - gulp
-// inline svg rendering
+// use store events to keep app reactive
 
 var hoodie  = new Hoodie();
 

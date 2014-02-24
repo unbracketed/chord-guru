@@ -2,7 +2,7 @@
 
 var React = require('react');
 var Button = require('react-bootstrap/cjs/Button');
-var ChordResults = require('./chord_results');
+var ChordResults = require('./chord_results').ChordResults;
 
 
 var ChordBuilder = React.createClass({
