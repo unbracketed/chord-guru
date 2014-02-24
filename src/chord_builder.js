@@ -13,7 +13,7 @@ var ChordBuilder = React.createClass({
       A: {
         display_name: 'A',
         major: [
-          '02220X-011100'
+          '02220X-011100',
         ],
         minor: [
           '01220X'

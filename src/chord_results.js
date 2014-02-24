@@ -12,10 +12,8 @@ var ChordResults = React.createClass({
       return (
         <div>
           <h2>{this.props.resultTitle}</h2>
-          <ChordDiagram
-            chord_data={this.props.result}
-            width={500}
-          />
+          <ChordList
+            chord_list={this.props.result}/>
         </div>
       );
     }
@@ -25,5 +23,20 @@ var ChordResults = React.createClass({
   }
 });
 
+
+var ChordList = React.createClass({
+  render: function(){
+    return (
+      <div>
+        {this.props.chord_list.map(function(chord, idx){
+          return(<ChordDiagram
+            chord_data={chord}
+            width={500}
+            key={'chord-diagram-'+idx} />);
+        } ,this)}
+      </div>
+    );
+  }
+});
 
 module.exports = ChordResults;

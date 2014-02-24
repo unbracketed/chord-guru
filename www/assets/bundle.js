@@ -17691,7 +17691,8 @@ var ChordBuilder = React.createClass({displayName: 'ChordBuilder',
       A: {
         display_name: 'A',
         major: [
-          '02220X-011100'
+          '02220X-011100',
+          'XX11XX'
         ],
         minor: [
           '01220X'
@@ -17836,7 +17837,8 @@ var ChordDiagram = React.createClass({displayName: 'ChordDiagram',
 
   render: function(){
 
-    var _info = this.props.chord_data[0];
+    var _info = this.props.chord_data;
+    console.log('rendering ' + _info);
     parts = _info.split("-");
     var frets_info = parts[0];
     var strings = [
@@ -17972,10 +17974,8 @@ var ChordResults = React.createClass({displayName: 'ChordResults',
       return (
         React.DOM.div(null, 
           React.DOM.h2(null, this.props.resultTitle),
-          ChordDiagram(
-            {chord_data:this.props.result,
-            width:500}
-          )
+          ChordList(
+            {chord_list:this.props.result})
         )
       );
     }
@@ -17985,6 +17985,21 @@ var ChordResults = React.createClass({displayName: 'ChordResults',
   }
 });
 
+
+var ChordList = React.createClass({displayName: 'ChordList',
+  render: function(){
+    return (
+      React.DOM.div(null, 
+        this.props.chord_list.map(function(chord, idx){
+          return(ChordDiagram(
+            {chord_data:chord,
+            width:500,
+            key:'chord-diagram-'+idx} ));
+        } ,this)
+      )
+    );
+  }
+});
 
 module.exports = ChordResults;
 
