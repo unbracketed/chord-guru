@@ -85,12 +85,11 @@ var ChordBuilder = React.createClass({
       return {
         result: "",
         key: "",
-        fingering: 0,
       }
     },
 
-    handleKeyClick: function(keyname) {
-        this.setState({key: keyname, result: this.chord_data[keyname].major})
+    handleKeyClick: function(keyname, display_name) {
+        this.setState({key: keyname, result: this.chord_data[keyname].major, resultTitle: display_name+" Major"})
         return false;
     },
 
@@ -98,14 +97,15 @@ var ChordBuilder = React.createClass({
         return (
             <div className="col-md-8">
               {Object.keys(this.chord_data).map(function(keyname, i) {
+                var display_name = this.chord_data[keyname].display_name;
                 return (
-                  <Button onClick={this.handleKeyClick.bind(this, keyname)} key={i}>{this.chord_data[keyname].display_name}</Button>
+                  <Button onClick={this.handleKeyClick.bind(this, keyname, display_name)} key={i}>{display_name}</Button>
                 );
               }, this)}
               <ChordResults
                 app={this.props.app}
-                name={this.state.key}
-                fingering={this.state.fingering}
+                keyName={this.state.key}
+                resultTitle={this.state.resultTitle}
                 result={this.state.result} />
             </div>
         );
