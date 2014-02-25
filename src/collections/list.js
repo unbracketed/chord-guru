@@ -15,32 +15,30 @@ module.exports = React.createClass({
         <h2>Collections</h2>
         <p style={infoStyle}>Create collections of chords for study, practice, or reference</p>
         <Nav bsStyle="pills" bsVariation="stacked" activeKey={'collection-0'} onSelect={this.handleSelect}>
-        {this.props.collections.map(function(coll, i){
-          return(
-            <div className="row">
-            <NavItem
-              key={'collection-'+i}
-              title={coll.name}
-              onClick={this.props.app.showCollectionDetail.bind(null, coll)}
-            >
-              {coll.name}
-            </NavItem>
-            <div className="row">
-             {coll.items.map(function(chord, idx){
-                return (
-                  <div className="col-md-4">
-                    <ChordDiagram
-                      chord_data={chord}
-                      width={100} />
-                  </div>
-                );
-             }, this)}
-            </div>
-</div>
-
-            );
-        }, this)}
-      </Nav>
+          {this.props.collections.map(function(coll, i){
+            return(
+              <div className="row">
+              <NavItem
+                key={'collection-'+i}
+                title={coll.name}
+                onClick={this.props.app.showCollectionDetail.bind(null, coll)}
+              >
+                {coll.name}
+              </NavItem>
+              <div className="row">
+                {coll.items.map(function(chord, idx){
+                  return (
+                    <div className="col-md-4">
+                      <ChordDiagram
+                        chord_data={chord}
+                        width={100} />
+                    </div>
+                  );
+                }, this)}
+              </div>
+            </div>);
+          }, this)}
+        </Nav>
       </div>
     );
   }
