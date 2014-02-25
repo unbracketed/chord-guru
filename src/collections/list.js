@@ -5,7 +5,7 @@ var Nav = require('react-bootstrap/cjs/Nav');
 var NavItem = require('react-bootstrap/cjs/NavItem');
 
 
-var ChordCollections = React.createClass({
+module.exports = React.createClass({
   render: function(){
     var infoStyle = this.props.collections.length ? {display: 'none'} : {};
     return (
@@ -28,5 +28,3 @@ var ChordCollections = React.createClass({
     );
   }
 });
-
-module.exports = ChordCollections;

@@ -2,7 +2,7 @@
 
 var React = require('react');
 var Button = require('react-bootstrap/cjs/Button');
-var ChordResults = require('./chord_results').ChordResults;
+var FinderResults = require('../chord_finder/list').FinderResults;
 
 
 var ChordBuilder = React.createClass({
@@ -102,7 +102,7 @@ var ChordBuilder = React.createClass({
                   <Button onClick={this.handleKeyClick.bind(this, keyname, display_name)} key={i}>{display_name}</Button>
                 );
               }, this)}
-              <ChordResults
+              <FinderResults
                 app={this.props.app}
                 keyName={this.state.key}
                 resultTitle={this.state.resultTitle}

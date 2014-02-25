@@ -3,9 +3,10 @@
 var React = require('react');
 var Button = require('react-bootstrap/cjs/Button');
 
-var chord_results = require('./chord_results');
-var ChordCollections = require('./chord_collections');
-var ChordBuilder = require('./chord_builder');
+var ResultList = require('./chord_finder/list').ResultList;
+var CollectionsList = require('./collections/list');
+var ChordBuilder = require('./chord_finder/builder');
+var CollectionDetailView = require('./collections/detailView');
 
 
 var ChordApp = React.createClass({
@@ -99,22 +100,19 @@ var ChordApp = React.createClass({
         addToCurrentCollection: this.addToCurrentCollection,
         showCollectionDetail: this.showCollectionDetail
       };
-      var ChordList = chord_results.ChordList;
 
       if (this.state.activeView == 'collectionDetail'){
         return (
-            <div className="row">
-              {this.state.currentCollection.name}
-
-              <ChordList app={app} chord_list={this.state.currentCollection.items} />
-            </div>
+          <CollectionDetailView
+            app={app}
+            currentCollection={this.state.currentCollection} />
         );
       }
       else {
         return (
           <div className="row">
             <ChordBuilder app={app} />
-            <ChordCollections
+            <CollectionsList
               ref="userCollections"
               app={app}
               collections={this.state.userCollections} />
