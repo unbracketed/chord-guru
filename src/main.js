@@ -150,6 +150,7 @@ var ChordApp = React.createClass({
 // user integration
 // live reload - gulp
 // use store events to keep app reactive
+// -
 
 var hoodie  = new Hoodie();
 
