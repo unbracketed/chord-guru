@@ -95,7 +95,7 @@ var ChordBuilder = React.createClass({
 
     render: function() {
         return (
-            <div className="col-md-8">
+            <div className="row">
               {Object.keys(this.chord_data).map(function(keyname, i) {
                 var display_name = this.chord_data[keyname].display_name;
                 return (

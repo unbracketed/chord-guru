@@ -17773,7 +17773,7 @@ var ChordBuilder = React.createClass({displayName: 'ChordBuilder',
 
     render: function() {
         return (
-            React.DOM.div( {className:"col-md-8"}, 
+            React.DOM.div( {className:"row"}, 
               Object.keys(this.chord_data).map(function(keyname, i) {
                 var display_name = this.chord_data[keyname].display_name;
                 return (
@@ -18023,24 +18023,41 @@ var React = require('react');
 var Nav = require('react-bootstrap/cjs/Nav');
 var NavItem = require('react-bootstrap/cjs/NavItem');
 
+var ChordDiagram = require('../chords/diagram');
+
 
 module.exports = React.createClass({
   render: function(){
     var infoStyle = this.props.collections.length ? {display: 'none'} : {};
     return (
-      React.DOM.div( {className:"col-md-4"}, 
+      React.DOM.div( {className:"row"}, 
         React.DOM.h2(null, "Collections"),
         React.DOM.p( {style:infoStyle}, "Create collections of chords for study, practice, or reference"),
         Nav( {bsStyle:"pills", bsVariation:"stacked", activeKey:'collection-0', onSelect:this.handleSelect}, 
         this.props.collections.map(function(coll, i){
           return(
+            React.DOM.div( {className:"row"}, 
             NavItem(
               {key:'collection-'+i,
               title:coll.name,
               onClick:this.props.app.showCollectionDetail.bind(null, coll)}
             , 
               coll.name
-            ));
+            ),
+            React.DOM.div( {className:"row"}, 
+             coll.items.map(function(chord, idx){
+                return (
+                  React.DOM.div( {className:"col-md-4"}, 
+                    ChordDiagram(
+                      {chord_data:chord,
+                      width:100} )
+                  )
+                );
+             }, this)
+            )
+)
+
+            );
         }, this)
       )
       )
@@ -18048,11 +18065,13 @@ module.exports = React.createClass({
   }
 });
 
-},{"react":151,"react-bootstrap/cjs/Nav":2,"react-bootstrap/cjs/NavItem":3}],157:[function(require,module,exports){
+},{"../chords/diagram":154,"react":151,"react-bootstrap/cjs/Nav":2,"react-bootstrap/cjs/NavItem":3}],157:[function(require,module,exports){
 /** @jsx React.DOM */
 
 var React = require('react');
 var Button = require('react-bootstrap/cjs/Button');
+var Nav = require('react-bootstrap/cjs/Nav');
+var NavItem = require('react-bootstrap/cjs/NavItem');
 
 var ResultList = require('./chord_finder/list').ResultList;
 var CollectionsList = require('./collections/list');
@@ -18066,7 +18085,7 @@ var ChordApp = React.createClass({displayName: 'ChordApp',
       return {
         userCollections: [],
         currentCollection: false,
-        activeView: 'chord-builder'
+        activeView: 'chord-finder'
       }
     },
 
@@ -18088,9 +18107,6 @@ var ChordApp = React.createClass({displayName: 'ChordApp',
           }
           else{
             console.log('No user collections found');
-            // component.setState({
-            //   userCollections: []
-            // });
           }
         })
         .fail(function(err){
@@ -18145,6 +18161,13 @@ var ChordApp = React.createClass({displayName: 'ChordApp',
       return false;
     },
 
+    handleNavSelect: function(selectedKey){
+      if (selectedKey == 'nav-chord-finder'){
+        this.setState({activeView: 'chord-finder'});
+      }
+      return false;
+    },
+
     render: function() {
 
       var app = {
@@ -18152,24 +18175,42 @@ var ChordApp = React.createClass({displayName: 'ChordApp',
         showCollectionDetail: this.showCollectionDetail
       };
 
-      if (this.state.activeView == 'collectionDetail'){
-        return (
-          CollectionDetailView(
-            {app:app,
-            currentCollection:this.state.currentCollection} )
-        );
+      var view;
+      var activeView = this.state.activeView;
+      if (activeView == 'collectionDetail'){
+        view = CollectionDetailView( {app:app, currentCollection:this.state.currentCollection} );
       }
       else {
-        return (
-          React.DOM.div( {className:"row"}, 
-            ChordBuilder( {app:app} ),
-            CollectionsList(
-              {ref:"userCollections",
-              app:app,
-              collections:this.state.userCollections} )
-          )
-        );
+        view = ChordBuilder( {app:app} );
       }
+
+      return (
+        React.DOM.div( {className:"container"}, 
+          React.DOM.div( {className:"row"}, 
+            React.DOM.div( {className:"col-md-9 col-md-push-3"}, 
+              Nav( {bsStyle:"pills", activeKey:'nav-'+activeView, onSelect:this.handleNavSelect}, 
+                NavItem( {key:'nav-chord-finder'}, "Chord Finder"),
+                NavItem( {key:'nav-progressions'}, "Progressions")
+              )
+            ),
+            React.DOM.div( {className:"col-md-3 col-md-pull-9"}, 
+              React.DOM.h1(null, "chord guru")
+            )
+          ),
+          React.DOM.div( {className:"row"}, 
+            React.DOM.div( {className:"col-md-8"}, 
+              view
+            ),
+            React.DOM.div( {className:"col-md-4"}, 
+              CollectionsList(
+                {ref:"userCollections",
+                app:app,
+                collections:this.state.userCollections} )
+            )
+          )
+        )
+      );
+
     }
 });
 
@@ -18184,7 +18225,7 @@ React.renderComponent(
   ChordApp(null),
   document.getElementById('content')
 );
-},{"./chord_finder/builder":152,"./chord_finder/list":153,"./collections/detailView":155,"./collections/list":156,"react":151,"react-bootstrap/cjs/Button":1}],158:[function(require,module,exports){
+},{"./chord_finder/builder":152,"./chord_finder/list":153,"./collections/detailView":155,"./collections/list":156,"react":151,"react-bootstrap/cjs/Button":1,"react-bootstrap/cjs/Nav":2,"react-bootstrap/cjs/NavItem":3}],158:[function(require,module,exports){
 // shim for using process in browser
 
 var process = module.exports = {};

@@ -2,6 +2,8 @@
 
 var React = require('react');
 var Button = require('react-bootstrap/cjs/Button');
+var Nav = require('react-bootstrap/cjs/Nav');
+var NavItem = require('react-bootstrap/cjs/NavItem');
 
 var ResultList = require('./chord_finder/list').ResultList;
 var CollectionsList = require('./collections/list');
@@ -15,7 +17,7 @@ var ChordApp = React.createClass({
       return {
         userCollections: [],
         currentCollection: false,
-        activeView: 'chord-builder'
+        activeView: 'chord-finder'
       }
     },
 
@@ -37,9 +39,6 @@ var ChordApp = React.createClass({
           }
           else{
             console.log('No user collections found');
-            // component.setState({
-            //   userCollections: []
-            // });
           }
         })
         .fail(function(err){
@@ -94,6 +93,13 @@ var ChordApp = React.createClass({
       return false;
     },
 
+    handleNavSelect: function(selectedKey){
+      if (selectedKey == 'nav-chord-finder'){
+        this.setState({activeView: 'chord-finder'});
+      }
+      return false;
+    },
+
     render: function() {
 
       var app = {
@@ -101,24 +107,42 @@ var ChordApp = React.createClass({
         showCollectionDetail: this.showCollectionDetail
       };
 
-      if (this.state.activeView == 'collectionDetail'){
-        return (
-          <CollectionDetailView
-            app={app}
-            currentCollection={this.state.currentCollection} />
-        );
+      var view;
+      var activeView = this.state.activeView;
+      if (activeView == 'collectionDetail'){
+        view = <CollectionDetailView app={app} currentCollection={this.state.currentCollection} />;
       }
       else {
-        return (
-          <div className="row">
-            <ChordBuilder app={app} />
-            <CollectionsList
-              ref="userCollections"
-              app={app}
-              collections={this.state.userCollections} />
-          </div>
-        );
+        view = <ChordBuilder app={app} />;
       }
+
+      return (
+        <div className="container">
+          <div className="row">
+            <div className="col-md-9 col-md-push-3">
+              <Nav bsStyle="pills" activeKey={'nav-'+activeView} onSelect={this.handleNavSelect}>
+                <NavItem key={'nav-chord-finder'}>Chord Finder</NavItem>
+                <NavItem key={'nav-progressions'}>Progressions</NavItem>
+              </Nav>
+            </div>
+            <div className="col-md-3 col-md-pull-9">
+              <h1>chord guru</h1>
+            </div>
+          </div>
+          <div className="row">
+            <div className="col-md-8">
+              {view}
+            </div>
+            <div className="col-md-4">
+              <CollectionsList
+                ref="userCollections"
+                app={app}
+                collections={this.state.userCollections} />
+            </div>
+          </div>
+        </div>
+      );
+
     }
 });
 
