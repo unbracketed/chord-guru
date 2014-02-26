@@ -32,6 +32,7 @@ module.exports = React.createClass({
                       <ChordDiagram
                         chord_data={chord}
                         width={100} />
+                        <p>{chord.chordPath}</p>
                     </div>
                   );
                 }, this)}

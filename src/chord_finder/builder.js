@@ -89,8 +89,15 @@ var ChordBuilder = React.createClass({
     },
 
     handleKeyClick: function(keyname, display_name) {
-        this.setState({key: keyname, result: this.chord_data[keyname].major, resultTitle: display_name+" Major"})
-        return false;
+      this.setState({
+        key: keyname,
+        result: [{
+          chordPath: keyname + '.major',
+          voicing: this.chord_data[keyname].major
+        }],
+        resultTitle: display_name+" Major"
+      });
+      return false;
     },
 
     render: function() {
