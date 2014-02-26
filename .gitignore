@@ -4,3 +4,6 @@ build
 
 #hoodie couchdb location
 data
+
+#browserify output
+www/assets/main.js
