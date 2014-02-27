@@ -11,9 +11,9 @@ module.exports = React.createClass({
               <div>
                 {this.props.currentCollection.items.map(function(chord, idx){
                   return (
-                      <div>
+                      <div className="col-md-3">
                         <ChordDiagram chord_data={chord}
-                            width={500}
+                            width={250}
                             key={'chord-diagram-'+idx} />
                         <p>{chord.chordPath}</p>
                       </div>

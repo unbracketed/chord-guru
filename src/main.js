@@ -110,6 +110,8 @@ var ChordApp = React.createClass({
 
     render: function() {
 
+      var sidebar = true;
+
       var app = {
         addToCurrentCollection: this.addToCurrentCollection,
         showCollectionDetail: this.showCollectionDetail,
@@ -120,6 +122,7 @@ var ChordApp = React.createClass({
       var activeView = this.state.activeView;
       if (activeView == 'collectionDetail'){
         view = <CollectionDetailView app={app} currentCollection={this.state.currentCollection} />;
+        sidebar = false;
       }
       else {
         view = <ChordBuilder app={app} />;
@@ -145,6 +148,34 @@ var ChordApp = React.createClass({
           </div>);
       }
 
+
+      var content;
+      if (sidebar){
+        content = (
+          <div className="row">
+            <div className="col-md-8">
+              {view}
+            </div>
+            <div className="col-md-4">
+              {recentChordsList ? recentChordsList : ""}
+              <CollectionsList
+                ref="userCollections"
+                app={app}
+                collections={this.state.userCollections} />
+            </div>
+          </div>
+        );
+      }
+      else{
+        content = (
+          <div className="row">
+            <div className="col-md-12">
+                  {view}
+            </div>
+          </div>
+        );
+      }
+
       return (
         <div className="container">
           <div className="row">
@@ -158,18 +189,7 @@ var ChordApp = React.createClass({
               <h1>chord guru</h1>
             </div>
           </div>
-          <div className="row">
-            <div className="col-md-8">
-              {view}
-            </div>
-            <div className="col-md-4">
-              {recentChordsList ? recentChordsList : ""}
-              <CollectionsList
-                ref="userCollections"
-                app={app}
-                collections={this.state.userCollections} />
-            </div>
-          </div>
+          {content}
         </div>
       );
 

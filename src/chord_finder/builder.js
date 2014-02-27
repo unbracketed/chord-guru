@@ -107,9 +107,18 @@ var ChordBuilder = React.createClass({
         return (
             <div className="row">
               {Object.keys(this.chord_data).map(function(keyname, i) {
+                var className = "btn btn-default";
+                if (this.state.key == keyname){
+                  className = "btn btn-primary";
+                }
                 var display_name = this.chord_data[keyname].display_name;
                 return (
-                  <Button onClick={this.handleKeyClick.bind(this, keyname, display_name)} key={i}>{display_name}</Button>
+                  <Button
+                    onClick={this.handleKeyClick.bind(this, keyname, display_name)}
+                    className={className}
+                    key={i}>
+                    {display_name}
+                  </Button>
                 );
               }, this)}
               <FinderResults
