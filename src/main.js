@@ -9,6 +9,7 @@ var ResultList = require('./chord_finder/list').ResultList;
 var CollectionsList = require('./collections/list');
 var ChordBuilder = require('./chord_finder/builder');
 var CollectionDetailView = require('./collections/detailView');
+var ChordDiagram = require('./chords/diagram');
 
 
 var ChordApp = React.createClass({
@@ -17,7 +18,8 @@ var ChordApp = React.createClass({
       return {
         userCollections: [],
         currentCollection: false,
-        activeView: 'chord-finder'
+        activeView: 'chord-finder',
+        recentChords: []
       }
     },
 
@@ -100,11 +102,18 @@ var ChordApp = React.createClass({
       return false;
     },
 
+    foundChord: function(chord){
+      var recentChords = this.state.recentChords;
+      recentChords.push(chord);
+      this.setState({recentChords: recentChords});
+    },
+
     render: function() {
 
       var app = {
         addToCurrentCollection: this.addToCurrentCollection,
-        showCollectionDetail: this.showCollectionDetail
+        showCollectionDetail: this.showCollectionDetail,
+        foundChord: this.foundChord
       };
 
       var view;
@@ -114,6 +123,26 @@ var ChordApp = React.createClass({
       }
       else {
         view = <ChordBuilder app={app} />;
+      }
+
+      if (this.state.recentChords.length > 1){
+        var recent = this.state.recentChords.slice(0);
+        recent = recent.reverse().slice(1);
+        var recentChordsList = (
+          <div>
+            <h2>Recent Chords</h2>
+            {recent.map(function(chord, idx){
+              return(
+                <div>
+                  <ChordDiagram
+                    chord_data={chord}
+                    width={75}
+                    key={'chord-diagram-'+idx} />
+                  {chord.chordPath}
+                </div>
+                );
+            }, this)}
+          </div>);
       }
 
       return (
@@ -134,6 +163,7 @@ var ChordApp = React.createClass({
               {view}
             </div>
             <div className="col-md-4">
+              {recentChordsList ? recentChordsList : ""}
               <CollectionsList
                 ref="userCollections"
                 app={app}
@@ -149,6 +179,8 @@ var ChordApp = React.createClass({
 //TODO
 // user integration
 // use store events to keep app reactive
+// local copy of jquery for development
+// barre chord rendering
 
 var hoodie  = new Hoodie();
 

@@ -15,15 +15,16 @@ var ChordDiagram = React.createClass({
 
     var _info = this.props.chord_data.voicing[0];
     console.log('rendering ' + _info);
-    parts = _info.split("-");
+    parts = _info.split(":");
     var frets_info = parts[0];
-    var strings = [
-      frets_info[0],
-      frets_info[1],
-      frets_info[2],
-      frets_info[3],
-      frets_info[4],
-      frets_info[5]];
+    var strings = frets_info.split('-');
+    // var strings = [
+    //   frets_info[0],
+    //   frets_info[1],
+    //   frets_info[2],
+    //   frets_info[3],
+    //   frets_info[4],
+    //   frets_info[5]];
 
     // var strings = this.props.chord_data[0];
 
@@ -53,7 +54,7 @@ var ChordDiagram = React.createClass({
             if (string == '0'){
               return (
                 <circle
-                cx={stringOffset + (5-i)*colWidth}
+                cx={stringOffset + i*colWidth}
                 cy={openMutedHeight / 2}
                 r={openRadius}
                 fill='white'
@@ -68,16 +69,16 @@ var ChordDiagram = React.createClass({
                 <line
                   stroke="black"
                   strokeWidth={openMutedStrokeWidth}
-                  x1={(stringOffset + (5-i)*colWidth)-openRadius}
-                  x2={(stringOffset + (5-i)*colWidth)+openRadius}
+                  x1={(stringOffset + i*colWidth)-openRadius}
+                  x2={(stringOffset + i*colWidth)+openRadius}
                   y1={openMutedHeight/2 - openRadius}
                   y2={openMutedHeight/2 + openRadius}>
                 </line>
                 <line
                   stroke="black"
                   strokeWidth={openMutedStrokeWidth}
-                  x1={(stringOffset + (5-i)*colWidth)+openRadius}
-                  x2={(stringOffset + (5-i)*colWidth)-openRadius}
+                  x1={(stringOffset + i*colWidth)+openRadius}
+                  x2={(stringOffset + i*colWidth)-openRadius}
                   y1={openMutedHeight/2 - openRadius}
                   y2={openMutedHeight/2 + openRadius}>
                 </line>
@@ -119,7 +120,7 @@ var ChordDiagram = React.createClass({
           if (fret){
             return (
               <circle
-                cx={stringOffset + (5-i)*colWidth}
+                cx={stringOffset + (i)*colWidth}
                 cy={openMutedHeight + (fret*fretHeight - fretHeight/2)}
                 r={radius}
                 key={i}>
