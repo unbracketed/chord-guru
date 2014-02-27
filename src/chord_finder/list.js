@@ -25,6 +25,7 @@ var FinderResults = React.createClass({
 });
 
 
+
 var ResultList = React.createClass({
   getDefaultProps: function(){
     return {

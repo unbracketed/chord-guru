@@ -13,70 +13,70 @@ var ChordBuilder = React.createClass({
       A: {
         display_name: 'A',
         major: [
-          '02220X-011100',
+          'X-0-2-2-2-0:001110',
         ],
         minor: [
-          '01220X'
+          'X-0-2-2-1-0'
         ]
       },
       Bflat: {
         display_name: 'A#/Bb',
         major: [
-          '1330XX-143000'
+          'X-X-0-3-3-1:000341'
         ]
       },
       B: {
         display_name: 'B',
         major: [
-          '24442X-133311'
+          'X-2-4-4-4-2:113331'
         ]
       },
       C: {
         display_name: 'C',
         major: [
-          '01023X-010230'
+          'X-3-2-0-1-0:032010'
         ]
       },
       Csharp: {
         display_name: 'C#/Db',
         major: [
-          '12134X-121340'
+          'X-4-3-1-2-1:043121'
         ]
       },
       D: {
         display_name: 'D',
         major: [
-          '2320XX'
+          'X-X-0-2-3-2'
         ]
       },
       Eflat: {
         display_name: 'D#/Eb',
         major: [
-          '3431XX-342100'
+          'X-X-1-3-4-3:001243'
         ]
       },
       E:  {
         display_name: 'E',
         major: [
-          '001220'
+          '0-2-2-1-0-0'
         ]
       },
       F: {
         display_name: 'F',
         major: [
-          '112331'
+          '1-3-3-2-1-1'
         ]
       },
       Fsharp: {
         display_name: 'F#/Gb',
         major: [
-          '223442-112431'
+          '2-4-4-3-2-2:134211'
         ]
       },
       G: {
         display_name: 'G',
         major: [
-          '300023'
+          '3-2-0-0-0-3'
         ]
       },
     },
@@ -89,14 +89,17 @@ var ChordBuilder = React.createClass({
     },
 
     handleKeyClick: function(keyname, display_name) {
+      var chord = {
+        chordPath: keyname + '.major',
+        voicing: this.chord_data[keyname].major
+      }
+      //TODO handle multiple results
       this.setState({
         key: keyname,
-        result: [{
-          chordPath: keyname + '.major',
-          voicing: this.chord_data[keyname].major
-        }],
+        result: [chord],
         resultTitle: display_name+" Major"
       });
+      this.props.app.foundChord(chord);
       return false;
     },
 
