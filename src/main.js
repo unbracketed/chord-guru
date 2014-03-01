@@ -6,7 +6,8 @@ var Nav = require('react-bootstrap/cjs/Nav');
 var NavItem = require('react-bootstrap/cjs/NavItem');
 
 var ResultList = require('./chord_finder/list').ResultList;
-var CollectionsList = require('./collections/list');
+var CollectionList = require('./collections/list');
+var SidebarCurrentCollection = require('./collections/sidebar_current_collection');
 var ChordCollection = require('./collections/collection');
 var ChordBuilder = require('./chord_finder/builder');
 var CollectionDetailView = require('./collections/detailView');
@@ -62,14 +63,15 @@ var ChordApp = React.createClass({
         items: [chord]
       };
 
+      var self = this;
       hoodie.store.add('collections', newCollectionData)
         .done(function(newCollection){
           console.log("Added new user collection");
           console.log(newCollection);
           curColl = new ChordCollection(newCollection);
-          userCollections = this.state.userCollections;
+          userCollections = self.state.userCollections;
           userCollections.push(newCollection);
-          this.setState({
+          self.setState({
             currentCollection: curColl,
             userCollections: userCollections
           });
@@ -77,35 +79,6 @@ var ChordApp = React.createClass({
         .fail(function(err){
           console.log(err);
         });
-
-
-      // var curColl = this.state.currentCollection;
-
-      // if (!curColl){
-      //   curColl = new ChordCollection({name: "", items: [chord]);
-
-      //   //create default User Collection
-      //   hoodie.store.add('collections', curColl)
-      //     .done(function(newObject){
-      //       console.log("Added new user collection");
-      //       console.log(newObject);
-      //       curColl = newObject;
-      //     })
-      //     .fail(function(err){
-      //       console.log(err);
-      //     });
-      //   this.setState({
-
-      //   });
-      // }
-      // else {
-      //   curColl.items.push(chord);
-      //   hoodie.store.update('collections', curColl.id, {items: curColl.items});
-      //   this.setState({
-      //     currentCollection: curColl,
-      //   });
-      // }
-      // //TODO use addtocurrent
 
       return false;
     },
@@ -131,6 +104,8 @@ var ChordApp = React.createClass({
     handleNavSelect: function(selectedKey){
       if (selectedKey == 'nav-chord-finder'){
         this.setState({activeView: 'chord-finder'});
+      } else if (selectedKey == 'nav-collections'){
+        this.setState({activeView: 'collections'});
       }
       return false;
     },
@@ -155,13 +130,22 @@ var ChordApp = React.createClass({
       };
 
       var view;
+      var activeNav;
       var activeView = this.state.activeView;
       if (activeView == 'collectionDetail'){
+        //TODO highlight Collections in nav
         view = <CollectionDetailView app={app} currentCollection={this.state.currentCollection} />;
         sidebar = false;
+        activeNav = 'collections';
+      }
+      else if (activeView == 'collections'){
+        view = <CollectionList app={app} />;
+        sidebar = false;
+        activeNav = 'collections';
       }
       else {
         view = <ChordBuilder app={app} />;
+        activeNav = 'chord-finder';
       }
 
       if (this.state.recentChords.length > 1){
@@ -194,10 +178,7 @@ var ChordApp = React.createClass({
             </div>
             <div className="col-md-4">
               {recentChordsList ? recentChordsList : ""}
-              <CollectionsList
-                ref="userCollections"
-                app={app}
-                collections={this.state.userCollections} />
+              <SidebarCurrentCollection app={app} />
             </div>
           </div>
         );
@@ -206,7 +187,7 @@ var ChordApp = React.createClass({
         content = (
           <div className="row">
             <div className="col-md-12">
-                  {view}
+              {view}
             </div>
           </div>
         );
@@ -216,9 +197,10 @@ var ChordApp = React.createClass({
         <div className="container">
           <div className="row">
             <div className="col-md-9 col-md-push-3">
-              <Nav bsStyle="pills" activeKey={'nav-'+activeView} onSelect={this.handleNavSelect}>
+              <Nav bsStyle="pills" activeKey={'nav-'+activeNav} onSelect={this.handleNavSelect}>
                 <NavItem key={'nav-chord-finder'}>Chord Finder</NavItem>
                 <NavItem key={'nav-progressions'}>Progressions</NavItem>
+                <NavItem key={'nav-collections'}>Collections</NavItem>
               </Nav>
             </div>
             <div className="col-md-3 col-md-pull-9">
@@ -228,7 +210,6 @@ var ChordApp = React.createClass({
           {content}
         </div>
       );
-
     }
 });
 

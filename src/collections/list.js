@@ -9,13 +9,13 @@ var ChordDiagram = require('../chords/diagram');
 
 module.exports = React.createClass({
   render: function(){
-    var infoStyle = this.props.collections.length ? {display: 'none'} : {};
+    var infoStyle = this.props.app.userCollections.length ? {display: 'none'} : {};
     return (
       <div className="row">
-        <h2>Current Collection</h2>
+        <h2>Collections</h2>
         <p style={infoStyle}>Create collections of chords for study, practice, or reference</p>
         <Nav bsStyle="pills" bsVariation="stacked" activeKey={'collection-0'} onSelect={this.handleSelect}>
-          {this.props.collections.map(function(coll, i){
+          {this.props.app.userCollections.map(function(coll, i){
             return(
               <div className="row">
               <NavItem
@@ -23,7 +23,7 @@ module.exports = React.createClass({
                 title={coll.name}
                 onClick={this.props.app.showCollectionDetail.bind(null, coll)}
               >
-                {coll.name ? coll.getName() : ""}
+                {coll.getName()}
               </NavItem>
               <div className="row">
                 {coll.items.map(function(chord, idx){
