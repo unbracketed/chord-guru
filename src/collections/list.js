@@ -12,7 +12,7 @@ module.exports = React.createClass({
     var infoStyle = this.props.collections.length ? {display: 'none'} : {};
     return (
       <div className="row">
-        <h2>Collections</h2>
+        <h2>Current Collection</h2>
         <p style={infoStyle}>Create collections of chords for study, practice, or reference</p>
         <Nav bsStyle="pills" bsVariation="stacked" activeKey={'collection-0'} onSelect={this.handleSelect}>
           {this.props.collections.map(function(coll, i){
@@ -23,7 +23,7 @@ module.exports = React.createClass({
                 title={coll.name}
                 onClick={this.props.app.showCollectionDetail.bind(null, coll)}
               >
-                {coll.name}
+                {coll.name ? coll.getName() : ""}
               </NavItem>
               <div className="row">
                 {coll.items.map(function(chord, idx){

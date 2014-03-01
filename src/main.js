@@ -7,6 +7,7 @@ var NavItem = require('react-bootstrap/cjs/NavItem');
 
 var ResultList = require('./chord_finder/list').ResultList;
 var CollectionsList = require('./collections/list');
+var ChordCollection = require('./collections/collection');
 var ChordBuilder = require('./chord_finder/builder');
 var CollectionDetailView = require('./collections/detailView');
 var ChordDiagram = require('./chords/diagram');
@@ -32,10 +33,15 @@ var ChordApp = React.createClass({
             console.log('Found user collections:');
             console.log(collections);
 
+            var _collections = [];
+            for (var idx in collections){
+              _collections.push(new ChordCollection(collections[idx]));
+            }
+
             // TODO find latest collection and make it current
 
             component.setState({
-              userCollections: collections,
+              userCollections: _collections,
               currentCollection: collections[0]
             });
           }
@@ -48,42 +54,69 @@ var ChordApp = React.createClass({
         });
     },
 
-    addToCurrentCollection: function(chord) {
+    addToNewCollection: function(chord) {
 
-      var curColl = this.state.currentCollection;
+      //create a new collection
+      newCollectionData = {
+        name: "",
+        items: [chord]
+      };
 
-      //is there a current collection?
-      if (!curColl){
-        curColl = {
-          name: "New Collection",
-          items: []
-        };
-
-        curColl.items.push(chord);
-
-        //create default User Collection
-        hoodie.store.add('collections', curColl)
-          .done(function(newObject){
-            console.log("Added new user collection: " + curColl.name);
-            console.log(newObject);
-            curColl = newObject;
-          })
-          .fail(function(err){
-            console.log(err);
+      hoodie.store.add('collections', newCollectionData)
+        .done(function(newCollection){
+          console.log("Added new user collection");
+          console.log(newCollection);
+          curColl = new ChordCollection(newCollection);
+          userCollections = this.state.userCollections;
+          userCollections.push(newCollection);
+          this.setState({
+            currentCollection: curColl,
+            userCollections: userCollections
           });
-        this.setState({
-          currentCollection: curColl,
-          userCollections: [curColl]
+        })
+        .fail(function(err){
+          console.log(err);
         });
-      }
-      else {
-        curColl.items.push(chord);
-        hoodie.store.update('collections', curColl.id, {items: curColl.items});
-        this.setState({
-          currentCollection: curColl,
-        });
-      }
 
+
+      // var curColl = this.state.currentCollection;
+
+      // if (!curColl){
+      //   curColl = new ChordCollection({name: "", items: [chord]);
+
+      //   //create default User Collection
+      //   hoodie.store.add('collections', curColl)
+      //     .done(function(newObject){
+      //       console.log("Added new user collection");
+      //       console.log(newObject);
+      //       curColl = newObject;
+      //     })
+      //     .fail(function(err){
+      //       console.log(err);
+      //     });
+      //   this.setState({
+
+      //   });
+      // }
+      // else {
+      //   curColl.items.push(chord);
+      //   hoodie.store.update('collections', curColl.id, {items: curColl.items});
+      //   this.setState({
+      //     currentCollection: curColl,
+      //   });
+      // }
+      // //TODO use addtocurrent
+
+      return false;
+    },
+
+    addToCurrentCollection: function(chord){
+      var curColl = this.state.currentCollection;
+      curColl.items.push(chord);
+      hoodie.store.update('collections', curColl.id, {items: curColl.items});
+      this.setState({
+        currentCollection: curColl,
+      });
       return false;
     },
 
@@ -114,8 +147,11 @@ var ChordApp = React.createClass({
 
       var app = {
         addToCurrentCollection: this.addToCurrentCollection,
+        addToNewCollection: this.addToNewCollection,
         showCollectionDetail: this.showCollectionDetail,
-        foundChord: this.foundChord
+        foundChord: this.foundChord,
+        currentCollection: this.state.currentCollection,
+        userCollections: this.state.userCollections
       };
 
       var view;
@@ -201,6 +237,7 @@ var ChordApp = React.createClass({
 // use store events to keep app reactive
 // local copy of jquery for development
 // barre chord rendering
+// collection should contain instrument and tuning info
 
 var hoodie  = new Hoodie();
 

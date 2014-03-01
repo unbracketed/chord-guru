@@ -14,7 +14,8 @@ var FinderResults = React.createClass({
           <h2>{this.props.resultTitle}</h2>
           <ResultList
             app={this.props.app}
-            chord_list={this.props.result} />
+            chord_list={this.props.result}
+          />
         </div>
       );
     }
@@ -34,16 +35,26 @@ var ResultList = React.createClass({
   },
 
   render: function(){
+    var newCollectionText = this.props.app.userCollections.length ? "Add to New Collection" : "Start a Collection";
     return (
       <div>
         {this.props.chord_list.map(function(chord, idx){
+
+          var addToCurrentCollection = (
+            <Button
+              onClick={this.props.app.addToCurrentCollection.bind(null, chord)}
+            >
+              Add to Current Collection
+            </Button>);
+
           return(
             <div>
               <ChordDiagram
                 chord_data={chord}
                 width={500}
                 key={'chord-diagram-'+idx} />
-                <Button onClick={this.props.app.addToCurrentCollection.bind(null, chord)}>Add to Collection</Button>
+              {this.props.app.currentCollection ? addToCurrentCollection : ""}
+              <Button onClick={this.props.app.addToNewCollection.bind(null, chord)}>{newCollectionText}</Button>
             </div>
           );
         } ,this)}
