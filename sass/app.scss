@@ -1,0 +1,81 @@
+//----------------------
+// Color
+//----------------------
+
+$white: #FCFAF7;
+$dark: #100A1F;
+$light: #F2E6D9;
+$brown: #1F180A;
+$tan: #D4A37D;
+$teal: #133039;
+$darkBlue: #0F212E;
+$blue: #1B3450;
+$lightBlue: #F4FAFB;
+$lightBlue2: #D5F1EC;
+$green: #91C757;
+
+$fretColor: $brown;
+$fretBackground: $lightBlue2;
+$headerBackground: $dark;
+
+
+//-------------------
+// Layout
+//--------------------
+
+.btn {
+    background: $blue;
+    color: $white;
+}
+.btn-primary, .btn-primary:focus {
+    background: $green;
+}
+
+.container {
+    background: $lightBlue;
+    height: 100%;
+
+    #header {
+        background: $brown;
+
+        h1 {
+            color: $lightBlue;
+        }
+        ul > li >a {
+            background: $blue;
+            color: $white;
+        }
+        ul > li.active > a {
+            background: $lightBlue;
+            color: $dark;
+        }
+    }
+
+    //----------------
+    // Chord Diagrams
+    //----------------
+
+    .muted-string {
+        stroke: $brown;
+    }
+
+    .open-string {
+        stroke: $brown;
+        fill: $light;
+    }
+
+    .fretboard-background {
+        fill: $fretBackground;
+    }
+
+    .fret-line {
+        stroke: $brown;
+    }
+    .string-line {
+        stroke: $brown;
+    }
+    .finger-mark {
+        fill: $darkBlue;
+    }
+
+}

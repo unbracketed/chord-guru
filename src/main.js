@@ -195,7 +195,7 @@ var ChordApp = React.createClass({
 
       return (
         <div className="container">
-          <div className="row">
+          <div id="header" className="row">
             <div className="col-md-9 col-md-push-3">
               <Nav bsStyle="pills" activeKey={'nav-'+activeNav} onSelect={this.handleNavSelect}>
                 <NavItem key={'nav-chord-finder'}>Chord Finder</NavItem>
@@ -214,6 +214,7 @@ var ChordApp = React.createClass({
 });
 
 //TODO
+// view state: chord finder should keep current chord
 // user integration
 // use store events to keep app reactive
 // local copy of jquery for development

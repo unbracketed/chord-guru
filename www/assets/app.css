@@ -1,0 +1,33 @@
+.btn {
+  background: #1b3450;
+  color: #fcfaf7; }
+
+.btn-primary, .btn-primary:focus {
+  background: #91c757; }
+
+.container {
+  background: #f4fafb;
+  height: 100%; }
+  .container #header {
+    background: #1f180a; }
+    .container #header h1 {
+      color: #f4fafb; }
+    .container #header ul > li > a {
+      background: #1b3450;
+      color: #fcfaf7; }
+    .container #header ul > li.active > a {
+      background: #f4fafb;
+      color: #100a1f; }
+  .container .muted-string {
+    stroke: #1f180a; }
+  .container .open-string {
+    stroke: #1f180a;
+    fill: #f2e6d9; }
+  .container .fretboard-background {
+    fill: #d5f1ec; }
+  .container .fret-line {
+    stroke: #1f180a; }
+  .container .string-line {
+    stroke: #1f180a; }
+  .container .finger-mark {
+    fill: #0f212e; }

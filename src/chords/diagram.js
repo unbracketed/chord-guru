@@ -54,20 +54,19 @@ var ChordDiagram = React.createClass({
             if (string == '0'){
               return (
                 <circle
-                cx={stringOffset + i*colWidth}
-                cy={openMutedHeight / 2}
-                r={openRadius}
-                fill='white'
-                stroke='black'
-                strokeWidth={openMutedStrokeWidth}
-                key={'open-' + i}>
-              </circle>
+                  className="open-string"
+                  cx={stringOffset + i*colWidth}
+                  cy={openMutedHeight / 2}
+                  r={openRadius}
+                  strokeWidth={openMutedStrokeWidth}
+                  key={'open-' + i}>
+                </circle>
               );
             }
             else {
               return (<g>
                 <line
-                  stroke="black"
+                  className="muted-string"
                   strokeWidth={openMutedStrokeWidth}
                   x1={(stringOffset + i*colWidth)-openRadius}
                   x2={(stringOffset + i*colWidth)+openRadius}
@@ -75,7 +74,7 @@ var ChordDiagram = React.createClass({
                   y2={openMutedHeight/2 + openRadius}>
                 </line>
                 <line
-                  stroke="black"
+                  className="muted-string"
                   strokeWidth={openMutedStrokeWidth}
                   x1={(stringOffset + i*colWidth)+openRadius}
                   x2={(stringOffset + i*colWidth)-openRadius}
@@ -87,11 +86,20 @@ var ChordDiagram = React.createClass({
           }
         }, this)}
 
+        {/* fretboard background */}
+        <rect
+          className="fretboard-background"
+          x={stringOffset}
+          y={openMutedHeight}
+          width={width-stringOffset*2}
+          height={frets.length * fretHeight}>
+        </rect>
+
         {/* strings */}
         {strings.map(function(string, i){
           return(
             <line
-              stroke="black"
+              className="string-line"
               x1={stringOffset + (i*colWidth)}
               x2={stringOffset + (i*colWidth)}
               y1={openMutedHeight}
@@ -105,7 +113,7 @@ var ChordDiagram = React.createClass({
         {frets.map(function(fret, i){
           return(
             <line
-              stroke="black"
+              className="fret-line"
               x1={stringOffset}
               x2={width - stringOffset}
               y1={openMutedHeight + i*fretHeight}
@@ -120,6 +128,7 @@ var ChordDiagram = React.createClass({
           if (fret){
             return (
               <circle
+                className="finger-mark"
                 cx={stringOffset + (i)*colWidth}
                 cy={openMutedHeight + (fret*fretHeight - fretHeight/2)}
                 r={radius}

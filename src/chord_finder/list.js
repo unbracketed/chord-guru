@@ -53,8 +53,10 @@ var ResultList = React.createClass({
                 chord_data={chord}
                 width={500}
                 key={'chord-diagram-'+idx} />
-              {this.props.app.currentCollection ? addToCurrentCollection : ""}
-              <Button onClick={this.props.app.addToNewCollection.bind(null, chord)}>{newCollectionText}</Button>
+              <p>
+                {this.props.app.currentCollection ? addToCurrentCollection : ""}
+                <Button onClick={this.props.app.addToNewCollection.bind(null, chord)}>{newCollectionText}</Button>
+              </p>
             </div>
           );
         } ,this)}
