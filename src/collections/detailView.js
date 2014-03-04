@@ -15,7 +15,7 @@ module.exports = React.createClass({
                         <ChordDiagram chord_data={chord}
                             width={250}
                             key={'chord-diagram-'+idx} />
-                        <p>{chord.long_name()}</p>
+                        <p>{chord.short_name()}</p>
                       </div>
                   );
                 }, this)}

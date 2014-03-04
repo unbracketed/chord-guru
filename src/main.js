@@ -43,7 +43,7 @@ var ChordApp = React.createClass({
 
             component.setState({
               userCollections: _collections,
-              currentCollection: collections[0]
+              currentCollection: _collections[0]
             });
           }
           else{
@@ -70,7 +70,8 @@ var ChordApp = React.createClass({
           console.log(newCollection);
           curColl = new ChordCollection(newCollection);
           userCollections = self.state.userCollections;
-          userCollections.push(newCollection);
+          // TODO new collection should be added to front of list
+          userCollections.push(curColl);
           self.setState({
             currentCollection: curColl,
             userCollections: userCollections
@@ -86,7 +87,19 @@ var ChordApp = React.createClass({
     addToCurrentCollection: function(chord){
       var curColl = this.state.currentCollection;
       curColl.items.push(chord);
-      hoodie.store.update('collections', curColl.id, {items: curColl.items});
+
+      hoodie.store.update('collections', curColl.id,
+        {items: curColl.items.map(function(item){
+          return item.asJSON();
+        })
+      })
+      .done(function(){
+        console.log("Updated collection");
+      })
+      .fail(function(err){
+          console.log(err);
+      });
+
       this.setState({
         currentCollection: curColl,
       });

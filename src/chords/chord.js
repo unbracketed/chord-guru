@@ -5,12 +5,12 @@ function Chord(chordData){
 
 Chord.prototype.keymap = {
     A: 'A',
-    Asharp: 'A#/Bb',
+    Bflat: 'A#/Bb',
     B: 'B',
     C: 'C',
     Csharp: 'C#/Db',
     D: 'D',
-    Dsharp: 'D#/Eb',
+    Eflat: 'D#/Eb',
     E: 'E',
     F: 'F',
     Fsharp: 'F#/Gb',
@@ -30,7 +30,7 @@ Chord.prototype.short_name = function(){
 
     var shortName = this.keymap[key];
     if (mod){
-        shortName.concat(mod);
+        shortName = shortName.concat(mod);
     }
     return shortName;
 };
@@ -42,10 +42,14 @@ Chord.prototype.long_name = function(){
 
     var longName = this.keymap[key];
     if (mod){
-        longName.concat(' ');
-        longName.concat(mod);
+        longName = longName.concat(' ');
+        longName = longName.concat(mod);
     }
     return longName;
+};
+
+Chord.prototype.asJSON = function(){
+    return {path: this.path, voicing: this.voicing};
 };
 
 module.exports = Chord;

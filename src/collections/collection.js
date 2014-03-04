@@ -1,6 +1,9 @@
+var Chord = require('../chords/chord');
+
 function ChordCollection(collectionObj) {
+    this.id = collectionObj.id;
     this.name = collectionObj.name;
-    this.items = collectionObj.items;
+    this.items = collectionObj.items.map(function(data){return new Chord(data);});
 }
 
 ChordCollection.prototype.name = '';
