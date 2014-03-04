@@ -18,15 +18,6 @@ var ChordDiagram = React.createClass({
     parts = _info.split(":");
     var frets_info = parts[0];
     var strings = frets_info.split('-');
-    // var strings = [
-    //   frets_info[0],
-    //   frets_info[1],
-    //   frets_info[2],
-    //   frets_info[3],
-    //   frets_info[4],
-    //   frets_info[5]];
-
-    // var strings = this.props.chord_data[0];
 
     //TODO determine from data
     var frets = [1,2,3,4];

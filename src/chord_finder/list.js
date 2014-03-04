@@ -8,14 +8,19 @@ var ChordDiagram = require('../chords/diagram')
 var FinderResults = React.createClass({
 
   render: function(){
+
     if (this.props.result){
       return (
-        <div>
-          <h2>{this.props.resultTitle}</h2>
-          <ResultList
-            app={this.props.app}
-            chord_list={this.props.result}
-          />
+        <div id="finder-results">
+          <div className="row">
+              <h2>{this.props.resultTitle}</h2>
+          </div>
+          <div className="row">
+            <ResultList
+              app={this.props.app}
+              chord_list={this.props.result}
+            />
+          </div>
         </div>
       );
     }
@@ -35,28 +40,32 @@ var ResultList = React.createClass({
   },
 
   render: function(){
+
+
     var newCollectionText = this.props.app.userCollections.length ? "Add to New Collection" : "Start a Collection";
+
     return (
-      <div>
+      <div className="row">
         {this.props.chord_list.map(function(chord, idx){
 
           var addToCurrentCollection = (
-            <Button
-              onClick={this.props.app.addToCurrentCollection.bind(null, chord)}
-            >
-              Add to Current Collection
-            </Button>);
+            <p>
+              <Button
+                onClick={this.props.app.addToCurrentCollection.bind(null, chord)}>Add to Current Collection
+              </Button>
+            </p>);
 
           return(
-            <div>
+            <div className="col-md-8 col-md-offset-2">
               <ChordDiagram
                 chord_data={chord}
                 width={500}
                 key={'chord-diagram-'+idx} />
+              {this.props.app.currentCollection ? addToCurrentCollection : ""}
               <p>
-                {this.props.app.currentCollection ? addToCurrentCollection : ""}
                 <Button onClick={this.props.app.addToNewCollection.bind(null, chord)}>{newCollectionText}</Button>
               </p>
+
             </div>
           );
         } ,this)}

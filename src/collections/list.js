@@ -9,37 +9,35 @@ var ChordDiagram = require('../chords/diagram');
 
 module.exports = React.createClass({
   render: function(){
+
     var infoStyle = this.props.app.userCollections.length ? {display: 'none'} : {};
+
     return (
       <div className="row">
         <h2>Collections</h2>
         <p style={infoStyle}>Create collections of chords for study, practice, or reference</p>
-        <Nav bsStyle="pills" bsVariation="stacked" activeKey={'collection-0'} onSelect={this.handleSelect}>
-          {this.props.app.userCollections.map(function(coll, i){
-            return(
-              <div className="row">
-              <NavItem
-                key={'collection-'+i}
-                title={coll.name}
-                onClick={this.props.app.showCollectionDetail.bind(null, coll)}
-              >
+        {this.props.app.userCollections.map(function(coll, i){
+          return(
+            <div className="row">
+              <div className="col-md-2">
+                <a href="#"
+                  onClick={this.props.app.showCollectionDetail.bind(null, coll)}>
                 {coll.getName()}
-              </NavItem>
-              <div className="row">
-                {coll.items.map(function(chord, idx){
-                  return (
-                    <div className="col-md-4">
-                      <ChordDiagram
-                        chord_data={chord}
-                        width={100} />
-                        <p>{chord.chordPath}</p>
-                    </div>
-                  );
-                }, this)}
+                </a>
               </div>
-            </div>);
-          }, this)}
-        </Nav>
+              {coll.items.map(function(chord, idx){
+                return (
+                  <div className="col-md-1">
+                    <ChordDiagram
+                      chord_data={chord}
+                      width={100} />
+                      <p>{chord.short_name()}</p>
+                  </div>
+                );
+              }, this)}
+            </div>
+          );
+        }, this)}
       </div>
     );
   }

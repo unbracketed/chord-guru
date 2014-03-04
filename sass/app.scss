@@ -18,10 +18,9 @@ $fretColor: $brown;
 $fretBackground: $lightBlue2;
 $headerBackground: $dark;
 
-
-//-------------------
-// Layout
-//--------------------
+h2 {
+    margin-left: 30px;
+}
 
 .btn {
     background: $blue;
@@ -31,7 +30,13 @@ $headerBackground: $dark;
     background: $green;
 }
 
-.container {
+
+//-------------------
+// Layout
+//--------------------
+
+
+#main {
     background: $lightBlue;
     height: 100%;
 
@@ -49,6 +54,10 @@ $headerBackground: $dark;
             background: $lightBlue;
             color: $dark;
         }
+    }
+
+    #finder-results p {
+        text-align: center;
     }
 
     //----------------

@@ -3,6 +3,7 @@
 var React = require('react');
 var Button = require('react-bootstrap/cjs/Button');
 var FinderResults = require('../chord_finder/list').FinderResults;
+var Chord = require('../chords/chord');
 
 
 var ChordBuilder = React.createClass({
@@ -89,15 +90,15 @@ var ChordBuilder = React.createClass({
     },
 
     handleKeyClick: function(keyname, display_name) {
-      var chord = {
-        chordPath: keyname + '.major',
+      var chord = new Chord({
+        path: keyname + '.major',
         voicing: this.chord_data[keyname].major
-      }
+      });
       //TODO handle multiple results
       this.setState({
         key: keyname,
         result: [chord],
-        resultTitle: display_name+" Major"
+        resultTitle: chord.long_name()
       });
       this.props.app.foundChord(chord);
       return false;
@@ -106,12 +107,16 @@ var ChordBuilder = React.createClass({
     render: function() {
         return (
             <div className="row">
+
+              {/* Key selector buttons */}
               {Object.keys(this.chord_data).map(function(keyname, i) {
+
                 var className = "btn btn-default";
                 if (this.state.key == keyname){
                   className = "btn btn-primary";
                 }
                 var display_name = this.chord_data[keyname].display_name;
+
                 return (
                   <Button
                     onClick={this.handleKeyClick.bind(this, keyname, display_name)}
@@ -121,6 +126,8 @@ var ChordBuilder = React.createClass({
                   </Button>
                 );
               }, this)}
+
+
               <FinderResults
                 app={this.props.app}
                 keyName={this.state.key}

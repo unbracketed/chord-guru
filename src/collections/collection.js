@@ -12,7 +12,7 @@ ChordCollection.prototype.getName = function() {
         return this.name;
     }
     //construct name from chords
-    var chordNames = this.items.map(function(item){return item.chordPath;});
+    var chordNames = this.items.map(function(item){return item.short_name();});
     return chordNames.join('-');
 };
 

@@ -161,7 +161,7 @@ var ChordApp = React.createClass({
                     chord_data={chord}
                     width={75}
                     key={'chord-diagram-'+idx} />
-                  {chord.chordPath}
+                  {chord.short_name()}
                 </div>
                 );
             }, this)}
@@ -225,5 +225,5 @@ var hoodie  = new Hoodie();
 
 React.renderComponent(
   <ChordApp/>,
-  document.getElementById('content')
+  document.getElementById('main')
 );

@@ -1,3 +1,6 @@
+h2 {
+  margin-left: 30px; }
+
 .btn {
   background: #1b3450;
   color: #fcfaf7; }
@@ -5,29 +8,31 @@
 .btn-primary, .btn-primary:focus {
   background: #91c757; }
 
-.container {
+#main {
   background: #f4fafb;
   height: 100%; }
-  .container #header {
+  #main #header {
     background: #1f180a; }
-    .container #header h1 {
+    #main #header h1 {
       color: #f4fafb; }
-    .container #header ul > li > a {
+    #main #header ul > li > a {
       background: #1b3450;
       color: #fcfaf7; }
-    .container #header ul > li.active > a {
+    #main #header ul > li.active > a {
       background: #f4fafb;
       color: #100a1f; }
-  .container .muted-string {
+  #main #finder-results p {
+    text-align: center; }
+  #main .muted-string {
     stroke: #1f180a; }
-  .container .open-string {
+  #main .open-string {
     stroke: #1f180a;
     fill: #f2e6d9; }
-  .container .fretboard-background {
+  #main .fretboard-background {
     fill: #d5f1ec; }
-  .container .fret-line {
+  #main .fret-line {
     stroke: #1f180a; }
-  .container .string-line {
+  #main .string-line {
     stroke: #1f180a; }
-  .container .finger-mark {
+  #main .finger-mark {
     fill: #0f212e; }
