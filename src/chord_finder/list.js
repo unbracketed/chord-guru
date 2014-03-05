@@ -60,6 +60,7 @@ var ResultList = React.createClass({
               <ChordDiagram
                 chord_data={chord}
                 width={500}
+                showLabel={false}
                 key={'chord-diagram-'+idx} />
               {this.props.app.currentCollection ? addToCurrentCollection : ""}
               <p>

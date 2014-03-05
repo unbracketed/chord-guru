@@ -5,6 +5,12 @@ var React = require('react');
 
 var ChordDiagram = React.createClass({
 
+  getDefaultProps: function(){
+    return {
+      showLabel: true
+    }
+  },
+
   getFret: function(info){
     if (info == '0' || info == 'X')
       return false;
@@ -26,7 +32,9 @@ var ChordDiagram = React.createClass({
     var colWidth = width / strings.length;
     var fretHeight = colWidth;
     var openMutedHeight = fretHeight * 0.5;
-    var height = frets.length * fretHeight + openMutedHeight;
+    var labelHeight = fretHeight * 2;
+    var fretboardBottom = frets.length * fretHeight + openMutedHeight;
+    var height = fretboardBottom + (this.props.showLabel ? labelHeight : 0);
     var stringOffset = colWidth / 2;
     //TODO make percentage based
     var textTopOffset = openMutedHeight * 0.5;
@@ -35,6 +43,8 @@ var ChordDiagram = React.createClass({
     var radius = (colWidth/2) * 0.75;
     var openRadius = openMutedHeight * 0.3;
     var openMutedStrokeWidth = width > 100 ? 2 : 1;
+
+    var label = this.props.showLabel ? (<text className="diagram-bottom-label" x={width/2} y={height-(labelHeight/2)}>{this.props.chord_data.short_name()}</text>) : '';
 
     return (
       <svg height={height} width={width} version="1.1" xmlns="http://www.w3.org/2000/svg" >
@@ -94,7 +104,7 @@ var ChordDiagram = React.createClass({
               x1={stringOffset + (i*colWidth)}
               x2={stringOffset + (i*colWidth)}
               y1={openMutedHeight}
-              y2={height}
+              y2={fretboardBottom}
               key={i}>
             </line>
           );
@@ -129,6 +139,8 @@ var ChordDiagram = React.createClass({
           }
         }, this)}
 
+        {/* label */}
+        {label}
       </svg>
     );
   }

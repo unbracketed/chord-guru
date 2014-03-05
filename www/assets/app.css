@@ -36,3 +36,8 @@ h2 {
     stroke: #1f180a; }
   #main .finger-mark {
     fill: #0f212e; }
+  #main .diagram-bottom-label {
+    font-weight: 600;
+    font-size: 15;
+    text-anchor: middle;
+    stroke: #1b3450; }

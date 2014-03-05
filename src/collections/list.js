@@ -6,7 +6,9 @@ var NavItem = require('react-bootstrap/cjs/NavItem');
 
 var ChordDiagram = require('../chords/diagram');
 
-
+/*
+  Shows a list of user's chord collections
+*/
 module.exports = React.createClass({
   render: function(){
 
@@ -31,7 +33,6 @@ module.exports = React.createClass({
                     <ChordDiagram
                       chord_data={chord}
                       width={100} />
-                      <p>{chord.short_name()}</p>
                   </div>
                 );
               }, this)}

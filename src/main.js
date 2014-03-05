@@ -169,14 +169,11 @@ var ChordApp = React.createClass({
             <h2>Recent Chords</h2>
             {recent.map(function(chord, idx){
               return(
-                <div>
-                  <ChordDiagram
-                    chord_data={chord}
-                    width={75}
-                    key={'chord-diagram-'+idx} />
-                  {chord.short_name()}
-                </div>
-                );
+                <ChordDiagram
+                chord_data={chord}
+                width={75}
+                key={'chord-diagram-'+idx} />
+              );
             }, this)}
           </div>);
       }
