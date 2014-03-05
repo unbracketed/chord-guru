@@ -5,17 +5,17 @@ function Chord(chordData){
 
 Chord.prototype.keymap = {
     A: 'A',
-    Bflat: 'A#/Bb',
+    Bflat: 'A♯/B♭',
     B: 'B',
     C: 'C',
-    Csharp: 'C#/Db',
+    Csharp: 'C♯/D♭',
     D: 'D',
-    Eflat: 'D#/Eb',
+    Eflat: 'D♯/E♭',
     E: 'E',
     F: 'F',
-    Fsharp: 'F#/Gb',
+    Fsharp: 'F♯/G♭',
     G: 'G',
-    Gsharp: 'G#/Ab'
+    Gsharp: 'G♯/A♭'
 };
 
 Chord.prototype.names = {

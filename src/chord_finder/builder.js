@@ -9,7 +9,6 @@ var Chord = require('../chords/chord');
 var ChordBuilder = React.createClass({
 
     // guitar data
-    // TODO unicode flat/sharp
     chord_data: {
       A: {
         display_name: 'A',
@@ -21,7 +20,7 @@ var ChordBuilder = React.createClass({
         ]
       },
       Bflat: {
-        display_name: 'A#/Bb',
+        display_name: 'A♯ / B♭',
         major: [
           'X-X-0-3-3-1:000341'
         ]
@@ -39,7 +38,7 @@ var ChordBuilder = React.createClass({
         ]
       },
       Csharp: {
-        display_name: 'C#/Db',
+        display_name: 'C♯ / D♭',
         major: [
           'X-4-3-1-2-1:043121'
         ]
@@ -51,7 +50,7 @@ var ChordBuilder = React.createClass({
         ]
       },
       Eflat: {
-        display_name: 'D#/Eb',
+        display_name: 'D♯ / E♭',
         major: [
           'X-X-1-3-4-3:001243'
         ]
@@ -69,7 +68,7 @@ var ChordBuilder = React.createClass({
         ]
       },
       Fsharp: {
-        display_name: 'F#/Gb',
+        display_name: 'F♯ / G♭',
         major: [
           '2-4-4-3-2-2:134211'
         ]
