@@ -1,10 +1,13 @@
 /** @jsx React.DOM */
 
+var $ = require('jquery');
+var Backbone = require('backbone');
 var React = require('react');
 var Button = require('react-bootstrap/cjs/Button');
 var Nav = require('react-bootstrap/cjs/Nav');
 var NavItem = require('react-bootstrap/cjs/NavItem');
 
+var router = require('./router');
 var ResultList = require('./chord_finder/list').ResultList;
 var CollectionList = require('./collections/list');
 var SidebarCurrentCollection = require('./collections/sidebar_current_collection');
@@ -13,6 +16,7 @@ var ChordBuilder = require('./chord_finder/builder');
 var CollectionDetailView = require('./collections/detailView');
 var ChordDiagram = require('./chords/diagram');
 
+Backbone.$ = $;
 
 var ChordApp = React.createClass({
 
@@ -224,11 +228,10 @@ var ChordApp = React.createClass({
 });
 
 //TODO
-// view state: chord finder should keep current chord
-// user integration
-// use store events to keep app reactive
-// local copy of jquery for development
 // barre chord rendering
+// starting fret label
+// chord label on top or bottom
+// improve muted and open string rendering
 // collection should contain instrument and tuning info
 
 var hoodie  = new Hoodie();

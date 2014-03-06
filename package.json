@@ -10,7 +10,10 @@
     "react": "~0.9.0-rc1",
     "browserify": "~3.30.1",
     "reactify": "~0.7.0",
-    "react-bootstrap": "~0.4.2"
+    "react-bootstrap": "~0.4.2",
+    "backbone": "~1.1.2",
+    "underscore": "~1.6.0",
+    "jquery": "~2.1.0"
   },
   "subdomain": "hoodie-chord-guru",
   "domains": [
