@@ -29,8 +29,17 @@ var ChordApp = React.createClass({
       }
     },
 
+    componentWillMount: function() {
+      router.on('route:chord-finder', this.chordFinderView);
+      router.on('route:collections', this.collectionsView);
+    },
+
     componentDidMount: function(){
-      var component = this;
+      var self = this;
+
+      console.log("Starting Backbone.history")
+      Backbone.history.start();
+
       hoodie.store
         .findAll('collections')
         .done(function(collections){
@@ -45,7 +54,7 @@ var ChordApp = React.createClass({
 
             // TODO find latest collection and make it current
 
-            component.setState({
+            self.setState({
               userCollections: _collections,
               currentCollection: _collections[0]
             });
@@ -57,6 +66,18 @@ var ChordApp = React.createClass({
         .fail(function(err){
           console.log(err);
         });
+    },
+
+    chordFinderView: function(){
+      this.setState({
+        activeView: 'chord-finder'
+      });
+    },
+
+    collectionsView: function(){
+      this.setState({
+        activeView: 'collections'
+      });
     },
 
     addToNewCollection: function(chord) {
@@ -121,8 +142,10 @@ var ChordApp = React.createClass({
     handleNavSelect: function(selectedKey){
       if (selectedKey == 'nav-chord-finder'){
         this.setState({activeView: 'chord-finder'});
+        Backbone.history.navigate('chord-finder');
       } else if (selectedKey == 'nav-collections'){
         this.setState({activeView: 'collections'});
+        Backbone.history.navigate('collections');
       }
       return false;
     },
