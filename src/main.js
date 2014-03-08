@@ -1,8 +1,10 @@
 /** @jsx React.DOM */
 
 var $ = require('jquery');
+var _ = require('underscore');
 var Backbone = require('backbone');
 var React = require('react');
+
 var Button = require('react-bootstrap/cjs/Button');
 var Nav = require('react-bootstrap/cjs/Nav');
 var NavItem = require('react-bootstrap/cjs/NavItem');
@@ -32,14 +34,13 @@ var ChordApp = React.createClass({
     componentWillMount: function() {
       router.on('route:chord-finder', this.chordFinderView);
       router.on('route:collections', this.collectionsView);
+      router.on('route:collection-detail', this.collection_detail_view);
     },
 
     componentDidMount: function(){
       var self = this;
 
-      console.log("Starting Backbone.history")
-      Backbone.history.start();
-
+      console.log("Attempt to load user data");
       hoodie.store
         .findAll('collections')
         .done(function(collections){
@@ -66,6 +67,9 @@ var ChordApp = React.createClass({
         .fail(function(err){
           console.log(err);
         });
+
+      console.log("Starting Backbone.history")
+      Backbone.history.start();
     },
 
     chordFinderView: function(){
@@ -77,6 +81,14 @@ var ChordApp = React.createClass({
     collectionsView: function(){
       this.setState({
         activeView: 'collections'
+      });
+    },
+
+    collection_detail_view: function(collection_id){
+      cur_coll = _.find(this.state.userCollections, function(coll){return coll.id == collection_id;});
+      this.setState({
+        activeView: 'collection-detail',
+        currentCollection: cur_coll
       });
     },
 
@@ -132,8 +144,10 @@ var ChordApp = React.createClass({
     },
 
     showCollectionDetail: function(collection){
+      console.log('showCollectionDetail')
+      Backbone.history.navigate('collections/'+collection.id);
       this.setState({
-        activeView: 'collectionDetail',
+        activeView: 'collection-detail',
         currentCollection: collection
       });
       return false;
@@ -169,11 +183,11 @@ var ChordApp = React.createClass({
         userCollections: this.state.userCollections
       };
 
+      //TODO move view stuff out of render
       var view;
       var activeNav;
       var activeView = this.state.activeView;
-      if (activeView == 'collectionDetail'){
-        //TODO highlight Collections in nav
+      if (activeView == 'collection-detail'){
         view = <CollectionDetailView app={app} currentCollection={this.state.currentCollection} />;
         sidebar = false;
         activeNav = 'collections';

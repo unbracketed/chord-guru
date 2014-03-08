@@ -10,6 +10,7 @@ var ChordDiagram = require('../chords/diagram');
   Shows a list of user's chord collections
 */
 module.exports = React.createClass({
+
   render: function(){
 
     var infoStyle = this.props.app.userCollections.length ? {display: 'none'} : {};
@@ -42,4 +43,6 @@ module.exports = React.createClass({
       </div>
     );
   }
+
+
 });
