@@ -85,7 +85,13 @@ var ChordBuilder = React.createClass({
       return {
         result: "",
         key: "",
-      }
+      };
+    },
+
+    getDefaultProps: function() {
+      return {
+        chord_path: null
+      };
     },
 
     handleKeyClick: function(keyname, display_name) {
@@ -131,7 +137,7 @@ var ChordBuilder = React.createClass({
                 app={this.props.app}
                 keyName={this.state.key}
                 resultTitle={this.state.resultTitle}
-                result={this.state.result} />
+                result={this.props.chord_path ? [this.props.chord_path] : this.state.result} />
             </div>
         );
     }

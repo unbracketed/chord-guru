@@ -72,9 +72,12 @@ var ChordApp = React.createClass({
       Backbone.history.start();
     },
 
-    chordFinderView: function(){
+    chordFinderView: function(chord_path){
+
+      var view = <ChordBuilder app={app} chord_path={chord_path} />;
       this.setState({
-        activeView: 'chord-finder'
+        activeView: 'chord-finder',
+        view_component: view
       });
     },
 
@@ -165,6 +168,7 @@ var ChordApp = React.createClass({
     },
 
     foundChord: function(chord){
+      Backbone.history.navigate('chord-finder/'.concat(chord.path));
       var recentChords = this.state.recentChords;
       recentChords.push(chord);
       this.setState({recentChords: recentChords});
@@ -198,7 +202,8 @@ var ChordApp = React.createClass({
         activeNav = 'collections';
       }
       else {
-        view = <ChordBuilder app={app} />;
+        // view = <ChordBuilder app={app} />;
+        view = this.state.view_component;
         activeNav = 'chord-finder';
       }
 

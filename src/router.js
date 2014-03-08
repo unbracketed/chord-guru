@@ -7,6 +7,7 @@ var Router =  Backbone.Router.extend({
         routes: {
             '': 'index',
             'chord-finder': 'chord-finder',
+            'chord-finder/:chord_path': 'chord-finder',
             'collections': 'collections',
             'collections/:collection_id': 'collection-detail'
         },
