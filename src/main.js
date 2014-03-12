@@ -1,4 +1,5 @@
 /** @jsx React.DOM */
+'use strict';
 
 var $ = require('jquery');
 var _ = require('underscore');
@@ -10,11 +11,10 @@ var Nav = require('react-bootstrap/cjs/Nav');
 var NavItem = require('react-bootstrap/cjs/NavItem');
 
 var router = require('./router');
-var ResultList = require('./chord_finder/list').ResultList;
 var CollectionList = require('./collections/list');
 var SidebarCurrentCollection = require('./collections/sidebar_current_collection');
 var ChordCollection = require('./collections/collection');
-var ChordBuilder = require('./chord_finder/builder');
+var ChordBuilder = require('./chord_finder/views/builder');
 var CollectionDetailView = require('./collections/detailView');
 var ChordDiagram = require('./chords/diagram');
 
@@ -73,11 +73,8 @@ var ChordApp = React.createClass({
     },
 
     chordFinderView: function(chord_path){
-
-      var view = <ChordBuilder app={app} chord_path={chord_path} />;
       this.setState({
         activeView: 'chord-finder',
-        view_component: view
       });
     },
 
@@ -171,7 +168,10 @@ var ChordApp = React.createClass({
       Backbone.history.navigate('chord-finder/'.concat(chord.path));
       var recentChords = this.state.recentChords;
       recentChords.push(chord);
-      this.setState({recentChords: recentChords});
+      this.setState({
+        recentChords: recentChords,
+        view_data: {chord_path: chord.path}
+      });
     },
 
     render: function() {
@@ -187,7 +187,6 @@ var ChordApp = React.createClass({
         userCollections: this.state.userCollections
       };
 
-      //TODO move view stuff out of render
       var view;
       var activeNav;
       var activeView = this.state.activeView;
@@ -203,7 +202,7 @@ var ChordApp = React.createClass({
       }
       else {
         // view = <ChordBuilder app={app} />;
-        view = this.state.view_component;
+        view = ChordBuilder(_.extend({app: app}, this.state.view_data));
         activeNav = 'chord-finder';
       }
 

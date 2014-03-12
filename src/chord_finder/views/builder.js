@@ -2,12 +2,13 @@
 
 var React = require('react');
 var Button = require('react-bootstrap/cjs/Button');
-var FinderResults = require('../chord_finder/list').FinderResults;
-var Chord = require('../chords/chord');
+var FinderResults = require('../finder_results');
+var Chord = require('../../chords/chord');
 
 
 var ChordBuilder = React.createClass({
 
+    //TODO deprecate display_name
     // guitar data
     chord_data: {
       A: {
@@ -109,7 +110,22 @@ var ChordBuilder = React.createClass({
       return false;
     },
 
+    chord_from_path: function(path){
+      var parts = path.split('.');
+      var voicings = this.chord_data[parts[0]][parts[1]];
+      return new Chord({path: path, voicing: voicings[0]});
+    },
+
     render: function() {
+
+        // if we have a chord_path, convert to chord
+        var chord;
+        if (this.props.chord_path){
+          chord = [this.chord_from_path(this.props.chord_path)];
+        } else {
+          chord = this.state.result;
+        }
+
         return (
             <div className="row">
 
@@ -137,7 +153,7 @@ var ChordBuilder = React.createClass({
                 app={this.props.app}
                 keyName={this.state.key}
                 resultTitle={this.state.resultTitle}
-                result={this.props.chord_path ? [this.props.chord_path] : this.state.result} />
+                result={chord} />
             </div>
         );
     }

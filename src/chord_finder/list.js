@@ -5,42 +5,16 @@ var Button = require('react-bootstrap/cjs/Button');
 var ChordDiagram = require('../chords/diagram')
 
 
-var FinderResults = React.createClass({
-
-  render: function(){
-
-    if (this.props.result){
-      return (
-        <div id="finder-results">
-          <div className="row">
-              <h2>{this.props.resultTitle}</h2>
-          </div>
-          <div className="row">
-            <ResultList
-              app={this.props.app}
-              chord_list={this.props.result}
-            />
-          </div>
-        </div>
-      );
-    }
-    else {
-      return (<div/>);
-    }
-  }
-});
-
-
-
 var ResultList = React.createClass({
+
   getDefaultProps: function(){
     return {
-      footer: false
+      footer: false,
+      chord_list: []
     }
   },
 
   render: function(){
-
 
     var newCollectionText = this.props.app.userCollections.length ? "Add to New Collection" : "Start a Collection";
 
@@ -75,5 +49,4 @@ var ResultList = React.createClass({
   }
 });
 
-exports.FinderResults = FinderResults;
-exports.ResultList = ResultList;
+module.exports = ResultList;

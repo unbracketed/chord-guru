@@ -20,7 +20,6 @@ var ChordDiagram = React.createClass({
   render: function(){
 
     var _info = this.props.chord_data.voicing[0];
-    console.log('rendering ' + _info);
     parts = _info.split(":");
     var frets_info = parts[0];
     var strings = frets_info.split('-');
