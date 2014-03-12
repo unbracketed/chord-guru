@@ -95,23 +95,23 @@ var ChordApp = React.createClass({
     addToNewCollection: function(chord) {
 
       //create a new collection
-      newCollectionData = {
+      var new_collection_data = {
         name: "",
         items: [chord]
       };
 
       var self = this;
-      hoodie.store.add('collections', newCollectionData)
-        .done(function(newCollection){
+      hoodie.store.add('collections', new_collection_data)
+        .done(function(new_collection){
           console.log("Added new user collection");
-          console.log(newCollection);
-          curColl = new ChordCollection(newCollection);
-          userCollections = self.state.userCollections;
+          console.log(new_collection);
+          var current_collection = new ChordCollection(new_collection);
+          var user_collections = self.state.userCollections;
           // TODO new collection should be added to front of list
-          userCollections.push(curColl);
+          user_collections.push(current_collection);
           self.setState({
-            currentCollection: curColl,
-            userCollections: userCollections
+            currentCollection: current_collection,
+            userCollections: user_collections
           });
         })
         .fail(function(err){
@@ -165,6 +165,8 @@ var ChordApp = React.createClass({
     },
 
     foundChord: function(chord){
+      console.log('foundChord');
+      console.log(chord);
       Backbone.history.navigate('chord-finder/'.concat(chord.path));
       var recentChords = this.state.recentChords;
       recentChords.push(chord);

@@ -112,8 +112,8 @@ var ChordBuilder = React.createClass({
 
     chord_from_path: function(path){
       var parts = path.split('.');
-      var voicings = this.chord_data[parts[0]][parts[1]];
-      return new Chord({path: path, voicing: voicings[0]});
+      var voicing = this.chord_data[parts[0]][parts[1]];
+      return new Chord({path: path, voicing: voicing});
     },
 
     render: function() {
