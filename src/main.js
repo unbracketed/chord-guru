@@ -73,8 +73,10 @@ var ChordApp = React.createClass({
     },
 
     chordFinderView: function(chord_path){
+      console.log('chordFinderView ' + (chord_path ? chord_path : ''));
       this.setState({
         activeView: 'chord-finder',
+        view_data: {chord_path: chord_path}
       });
     },
 
@@ -85,7 +87,7 @@ var ChordApp = React.createClass({
     },
 
     collection_detail_view: function(collection_id){
-      cur_coll = _.find(this.state.userCollections, function(coll){return coll.id == collection_id;});
+      var cur_coll = _.find(this.state.userCollections, function(coll){return coll.id == collection_id;});
       this.setState({
         activeView: 'collection-detail',
         currentCollection: cur_coll
@@ -203,7 +205,10 @@ var ChordApp = React.createClass({
         activeNav = 'collections';
       }
       else {
-        // view = <ChordBuilder app={app} />;
+        console.log('calling chordbuilder with');
+        console.log(this.state.view_data);
+        console.log(_.extend({app: app}, this.state.view_data));
+
         view = ChordBuilder(_.extend({app: app}, this.state.view_data));
         activeNav = 'chord-finder';
       }

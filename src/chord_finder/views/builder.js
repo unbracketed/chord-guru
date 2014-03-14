@@ -95,6 +95,17 @@ var ChordBuilder = React.createClass({
       };
     },
 
+    componentDidMount: function() {
+      console.log('ChordBuilder mounted');
+      console.log(this.props);
+      console.log(this.state);
+    },
+
+    componentWillReceiveProps: function(nextProps) {
+      console.log('ChordBuilder mounted');
+      console.log(nextProps);
+    },
+
     handleKeyClick: function(keyname, display_name) {
       var chord = new Chord({
         path: keyname + '.major',
