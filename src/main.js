@@ -13,6 +13,7 @@ var NavItem = require('react-bootstrap/cjs/NavItem');
 var router = require('./router');
 var CollectionList = require('./collections/list');
 var SidebarCurrentCollection = require('./collections/sidebar_current_collection');
+var RecentChords = require('./collections/sidebar_recent_chords');
 var ChordCollection = require('./collections/collection');
 var ChordBuilder = require('./chord_finder/views/builder');
 var CollectionDetailView = require('./collections/detailView');
@@ -27,7 +28,7 @@ var ChordApp = React.createClass({
         userCollections: [],
         currentCollection: false,
         activeView: 'chord-finder',
-        recentChords: []
+        recent_chords: []
       }
     },
 
@@ -170,10 +171,10 @@ var ChordApp = React.createClass({
       console.log('foundChord');
       console.log(chord);
       Backbone.history.navigate('chord-finder/'.concat(chord.path));
-      var recentChords = this.state.recentChords;
-      recentChords.push(chord);
+      var recent_chords = this.state.recent_chords;
+      recent_chords.push(chord);
       this.setState({
-        recentChords: recentChords,
+        recent_chords: recent_chords,
         view_data: {chord_path: chord.path}
       });
     },
@@ -213,23 +214,7 @@ var ChordApp = React.createClass({
         activeNav = 'chord-finder';
       }
 
-      if (this.state.recentChords.length > 1){
-        var recent = this.state.recentChords.slice(0);
-        recent = recent.reverse().slice(1);
-        var recentChordsList = (
-          <div>
-            <h2>Recent Chords</h2>
-            {recent.map(function(chord, idx){
-              return(
-                <ChordDiagram
-                chord_data={chord}
-                width={75}
-                key={'chord-diagram-'+idx} />
-              );
-            }, this)}
-          </div>);
-      }
-
+      var recent_chords_list = <RecentChords recent_chords={this.state.recent_chords} />;
 
       var content;
       if (sidebar){
@@ -239,7 +224,7 @@ var ChordApp = React.createClass({
               {view}
             </div>
             <div className="col-md-4">
-              {recentChordsList ? recentChordsList : ""}
+              {recent_chords_list}
               <SidebarCurrentCollection app={app} />
             </div>
           </div>
@@ -280,7 +265,11 @@ var ChordApp = React.createClass({
 // starting fret label
 // chord label on top or bottom
 // improve muted and open string rendering
+
 // collection should contain instrument and tuning info
+
+// use crossing
+// bundle vendor libs separately
 
 var hoodie  = new Hoodie();
 
