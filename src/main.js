@@ -214,7 +214,7 @@ var ChordApp = React.createClass({
         activeNav = 'chord-finder';
       }
 
-      var recent_chords_list = <RecentChords recent_chords={this.state.recent_chords} />;
+      var recent_chords_list = <RecentChords app={app} recent_chords={this.state.recent_chords} />;
 
       var content;
       if (sidebar){
@@ -270,6 +270,8 @@ var ChordApp = React.createClass({
 
 // use crossing
 // bundle vendor libs separately
+
+// if initial URL is chord, add it to recent chords
 
 var hoodie  = new Hoodie();
 

@@ -4,7 +4,7 @@ var React = require('react');
 var Nav = require('react-bootstrap/cjs/Nav');
 var NavItem = require('react-bootstrap/cjs/NavItem');
 
-var ChordDiagram = require('../chords/diagram');
+var BuilderChord = require('../chord_finder/builder_chord');
 
 
 module.exports = React.createClass({
@@ -15,11 +15,10 @@ module.exports = React.createClass({
           <h2>Current Collection</h2>
           {this.props.app.currentCollection.items.map(function(chord, i){
             return(
-              <div className="col-md-4">
-                <ChordDiagram
-                  chord_data={chord}
-                  width={100} />
-              </div>
+              <BuilderChord
+                app={this.props.app}
+                chord={chord}
+                width={100} />
             );
           }, this)}
         </div>
