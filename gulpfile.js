@@ -2,7 +2,7 @@
 var gulp = require('gulp');
 
 require('./gulp/app');
-// require('./gulp/clean');
+require('./gulp/clean');
 // require('./gulp/fonts');
 // require('./gulp/help');
 // require('./gulp/jshint');
@@ -14,7 +14,7 @@ require('./gulp/watch');
 
 gulp.task('build', [
   // 'jshint',
-  // 'clean',
+  'clean',
   'app',
   // 'tests',
   'vendor',

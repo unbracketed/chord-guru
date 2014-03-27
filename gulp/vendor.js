@@ -39,7 +39,7 @@ gulp.task('vendor', function() {
     .pipe(rename('vendor' + (production ? '.min' : '') + '.js'))
 
     // Save to the dist directory if production, or to the build directory
-    .pipe(gulp.dest(production ? 'dist/' : 'www/assets/'));
+    .pipe(gulp.dest(production ? 'dist/' : 'www/assets/build/'));
 
 });
 
