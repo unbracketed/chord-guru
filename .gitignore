@@ -6,4 +6,5 @@ build
 data
 
 #browserify output
-www/assets/main.js
+www/assets/chord-guru.*
+www/assets/vendor.js
