@@ -269,7 +269,6 @@ var ChordApp = React.createClass({
 // collection should contain instrument and tuning info
 
 // use crossing
-// bundle vendor libs separately
 
 // if initial URL is chord, add it to recent chords
 
