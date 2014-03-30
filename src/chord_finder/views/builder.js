@@ -86,6 +86,7 @@ var ChordBuilder = React.createClass({
       return {
         result: "",
         key: "",
+        chord_type: "major"
       };
     },
 
@@ -107,18 +108,39 @@ var ChordBuilder = React.createClass({
     },
 
     handleKeyClick: function(keyname, display_name) {
-      var chord = new Chord({
-        path: keyname + '.major',
-        voicing: this.chord_data[keyname].major
-      });
+      //TODO cancel event
+
+      var chord = this.resolveChord(keyname, this.state.chord_type);
       //TODO handle multiple results
       this.setState({
         key: keyname,
         result: [chord],
         resultTitle: chord.long_name()
       });
+
       this.props.app.foundChord(chord);
       return false;
+    },
+
+    handleChordTypeClick: function(chord_type, event) {
+      event.preventDefault();
+      var chord = this.resolveChord(this.state.key, chord_type);
+      this.setState({
+        chord_type: chord_type,
+        result: [chord],
+        resultTitle: chord.long_name()
+      });
+      this.props.app.foundChord(chord);
+    },
+
+    resolveChord: function(keyname, chord_type) {
+      //TODO Lowercase chord type
+      var chord_path = keyname + '.' + chord_type;
+      var chord = new Chord({
+        path: chord_path,
+        voicing: this.chord_data[keyname][this.state.chord_type]
+      });
+      return chord;
     },
 
     chord_from_path: function(path){
@@ -137,34 +159,56 @@ var ChordBuilder = React.createClass({
           chord = this.state.result;
         }
 
+        var buttonClass = "btn btn-default"
+
         return (
             <div className="row">
 
-              {/* Key selector buttons */}
-              {Object.keys(this.chord_data).map(function(keyname, i) {
+              <div className="col-md-12">
+                {/* Key selector buttons */}
+                {Object.keys(this.chord_data).map(function(keyname, i) {
 
-                var className = "btn btn-default";
-                if (this.state.key == keyname){
-                  className = "btn btn-primary";
-                }
-                var display_name = this.chord_data[keyname].display_name;
+                  var className = "btn btn-default";
+                  if (this.state.key == keyname){
+                    className = "btn btn-primary";
+                  }
+                  var display_name = this.chord_data[keyname].display_name;
 
-                return (
-                  <Button
-                    onClick={this.handleKeyClick.bind(this, keyname, display_name)}
-                    className={className}
-                    key={i}>
-                    {display_name}
-                  </Button>
-                );
-              }, this)}
+                  return (
+                    <Button
+                      onClick={this.handleKeyClick.bind(this, keyname, display_name)}
+                      className={className}
+                      key={i}>
+                      {display_name}
+                    </Button>
+                  );
+                }, this)}
 
-
-              <FinderResults
-                app={this.props.app}
-                keyName={this.state.key}
-                resultTitle={this.state.resultTitle}
-                result={chord} />
+              </div>
+              <div className="col-md-12">
+                <Button
+                  className={this.state.chord_type == 'major' ? 'btn btn-primary' : buttonClass}
+                  onClick={this.handleChordTypeClick.bind(this, 'major')}>
+                  Major
+                </Button>
+                <Button
+                  className={this.state.chord_type == 'minor' ? 'btn btn-primary' : buttonClass}
+                  onClick={this.handleChordTypeClick.bind(this, 'minor')}>
+                  Minor
+                </Button>
+                <Button
+                  className={this.state.chord_type == 'seventh' ? 'btn btn-primary' : buttonClass}
+                  onClick={this.handleChordTypeClick.bind(this, 'seventh')}>
+                  7th
+                </Button>
+              </div>
+              <div className="row">
+                <FinderResults
+                  app={this.props.app}
+                  keyName={this.state.key}
+                  resultTitle={this.state.resultTitle}
+                  result={chord} />
+              </div>
             </div>
         );
     }
