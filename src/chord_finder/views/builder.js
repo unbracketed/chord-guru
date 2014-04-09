@@ -114,8 +114,8 @@ var ChordBuilder = React.createClass({
       //TODO handle multiple results
       this.setState({
         key: keyname,
-        result: [chord],
-        resultTitle: chord.long_name()
+        result: chord ? [chord] : "no data",
+        resultTitle: chord ? chord.long_name() : "No data yet"
       });
 
       this.props.app.foundChord(chord);
@@ -127,20 +127,26 @@ var ChordBuilder = React.createClass({
       var chord = this.resolveChord(this.state.key, chord_type);
       this.setState({
         chord_type: chord_type,
-        result: [chord],
-        resultTitle: chord.long_name()
+        result: chord ? [chord] : "no data",
+        resultTitle: chord ? chord.long_name() : "No data yet"
       });
       this.props.app.foundChord(chord);
     },
 
     resolveChord: function(keyname, chord_type) {
-      //TODO Lowercase chord type
+      var normalized_type = chord_type.toLowerCase();
       var chord_path = keyname + '.' + chord_type;
-      var chord = new Chord({
-        path: chord_path,
-        voicing: this.chord_data[keyname][this.state.chord_type]
-      });
-      return chord;
+      var voicing = this.chord_data[keyname][normalized_type];
+      if (typeof voicing == 'undefined'){
+        return false;
+      }
+      else {
+        var chord = new Chord({
+          path: chord_path,
+          voicing: this.chord_data[keyname][this.state.chord_type]
+        });
+        return chord;
+      }
     },
 
     chord_from_path: function(path){

@@ -10,6 +10,9 @@ var FinderResults = React.createClass({
   render: function(){
 
     if (this.props.result){
+      if (this.props.result == 'no data'){
+        return <div>No diagram for this chord yet</div>
+      }
       return (
         <div id="finder-results">
           <div className="row">
