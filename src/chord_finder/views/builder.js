@@ -162,55 +162,64 @@ var ChordBuilder = React.createClass({
         var buttonClass = "btn btn-default"
 
         return (
-            <div className="row">
+          <div className="row">
+            <div className="col-md-12">
 
-              <div className="col-md-12">
-                {/* Key selector buttons */}
-                {Object.keys(this.chord_data).map(function(keyname, i) {
-
-                  var className = "btn btn-default";
-                  if (this.state.key == keyname){
-                    className = "btn btn-primary";
-                  }
-                  var display_name = this.chord_data[keyname].display_name;
-
-                  return (
-                    <Button
-                      onClick={this.handleKeyClick.bind(this, keyname, display_name)}
-                      className={className}
-                      key={i}>
-                      {display_name}
-                    </Button>
-                  );
-                }, this)}
-
-              </div>
-              <div className="col-md-12">
-                <Button
-                  className={this.state.chord_type == 'major' ? 'btn btn-primary' : buttonClass}
-                  onClick={this.handleChordTypeClick.bind(this, 'major')}>
-                  Major
-                </Button>
-                <Button
-                  className={this.state.chord_type == 'minor' ? 'btn btn-primary' : buttonClass}
-                  onClick={this.handleChordTypeClick.bind(this, 'minor')}>
-                  Minor
-                </Button>
-                <Button
-                  className={this.state.chord_type == 'seventh' ? 'btn btn-primary' : buttonClass}
-                  onClick={this.handleChordTypeClick.bind(this, 'seventh')}>
-                  7th
-                </Button>
-              </div>
               <div className="row">
-                <FinderResults
-                  app={this.props.app}
-                  keyName={this.state.key}
-                  resultTitle={this.state.resultTitle}
-                  result={chord} />
+                {/* Key selector buttons */}
+                <div className="col-md-12">
+                  {Object.keys(this.chord_data).map(function(keyname, i) {
+                    var className = "btn btn-default";
+                    if (this.state.key == keyname){
+                      className = "btn btn-primary";
+                    }
+                    var display_name = this.chord_data[keyname].display_name;
+                    return (
+                      <Button
+                        onClick={this.handleKeyClick.bind(this, keyname, display_name)}
+                        className={className}
+                        key={i}>
+                        {display_name}
+                      </Button>
+                    );
+                  }, this)}
+                </div>
+              </div>
+
+              {/* chord type selectors */}
+              <div className="row">
+                <div className="col-md-12">
+                  <Button
+                    className={this.state.chord_type == 'major' ? 'btn btn-primary' : buttonClass}
+                    onClick={this.handleChordTypeClick.bind(this, 'major')}>
+                    Major
+                  </Button>
+                  <Button
+                    className={this.state.chord_type == 'minor' ? 'btn btn-primary' : buttonClass}
+                    onClick={this.handleChordTypeClick.bind(this, 'minor')}>
+                    Minor
+                  </Button>
+                  <Button
+                    className={this.state.chord_type == 'seventh' ? 'btn btn-primary' : buttonClass}
+                    onClick={this.handleChordTypeClick.bind(this, 'seventh')}>
+                    7th
+                  </Button>
+                </div>
+              </div>
+
+
+              <div className="row">
+                <div className="col-md-12">
+                  <FinderResults
+                    app={this.props.app}
+                    keyName={this.state.key}
+                    resultTitle={this.state.resultTitle}
+                    result={chord} />
+                </div>
               </div>
             </div>
-        );
+          </div>
+      );
     }
 
 });
