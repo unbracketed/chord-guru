@@ -60,6 +60,12 @@ var ChordBuilder = React.createClass({
         display_name: 'E',
         major: [
           '0-2-2-1-0-0'
+        ],
+        minor: [
+          '0-2-2-0-0-0'
+        ],
+        seventh: [
+          '0-2-2-1-3-0'
         ]
       },
       F: {
@@ -103,12 +109,14 @@ var ChordBuilder = React.createClass({
     },
 
     componentWillReceiveProps: function(nextProps) {
-      console.log('ChordBuilder mounted');
+      console.log('ChordBuilder will receive props');
       console.log(nextProps);
     },
 
     handleKeyClick: function(keyname, display_name) {
       //TODO cancel event
+
+      console.log('handleKeyClick: ' + keyname + ' ' + display_name);
 
       var chord = this.resolveChord(keyname, this.state.chord_type);
       //TODO handle multiple results
@@ -118,22 +126,28 @@ var ChordBuilder = React.createClass({
         resultTitle: chord ? chord.long_name() : "No data yet"
       });
 
-      this.props.app.foundChord(chord);
+      if (chord){
+        this.props.app.foundChord(chord);
+      }
       return false;
     },
 
     handleChordTypeClick: function(chord_type, event) {
       event.preventDefault();
+      console.log('handleChordTypeClick: ' + chord_type);
       var chord = this.resolveChord(this.state.key, chord_type);
       this.setState({
         chord_type: chord_type,
         result: chord ? [chord] : "no data",
         resultTitle: chord ? chord.long_name() : "No data yet"
       });
-      this.props.app.foundChord(chord);
+      if (chord){
+        this.props.app.foundChord(chord);
+      }
     },
 
     resolveChord: function(keyname, chord_type) {
+      console.log('resolveChord ' + keyname + ' ' + chord_type);
       var normalized_type = chord_type.toLowerCase();
       var chord_path = keyname + '.' + chord_type;
       var voicing = this.chord_data[keyname][normalized_type];
@@ -195,24 +209,17 @@ var ChordBuilder = React.createClass({
               {/* chord type selectors */}
               <div className="row">
                 <div className="col-md-12">
-                  <Button
-                    className={this.state.chord_type == 'major' ? 'btn btn-primary' : buttonClass}
-                    onClick={this.handleChordTypeClick.bind(this, 'major')}>
-                    Major
-                  </Button>
-                  <Button
-                    className={this.state.chord_type == 'minor' ? 'btn btn-primary' : buttonClass}
-                    onClick={this.handleChordTypeClick.bind(this, 'minor')}>
-                    Minor
-                  </Button>
-                  <Button
-                    className={this.state.chord_type == 'seventh' ? 'btn btn-primary' : buttonClass}
-                    onClick={this.handleChordTypeClick.bind(this, 'seventh')}>
-                    7th
-                  </Button>
+                  {[['major', 'Major'], ['minor', 'Minor'], ['seventh', '7th']].map(function(chordType, i){
+                    return (
+                      <Button
+                        className={this.state.chord_type == chordType[0] ? 'btn btn-primary' : buttonClass}
+                        onClick={this.handleChordTypeClick.bind(this, chordType[0])}>
+                        {chordType[1]}
+                      </Button>
+                    );
+                  }, this)}
                 </div>
               </div>
-
 
               <div className="row">
                 <div className="col-md-12">
