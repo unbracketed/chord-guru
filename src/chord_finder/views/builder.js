@@ -157,13 +157,14 @@ var ChordBuilder = React.createClass({
       else {
         var chord = new Chord({
           path: chord_path,
-          voicing: this.chord_data[keyname][this.state.chord_type]
+          voicing: this.chord_data[keyname][chord_type]
         });
         return chord;
       }
     },
 
     chord_from_path: function(path){
+      console.log('Builder.chord_from_path: '+path);
       var parts = path.split('.');
       var voicing = this.chord_data[parts[0]][parts[1]];
       return new Chord({path: path, voicing: voicing});
@@ -171,15 +172,19 @@ var ChordBuilder = React.createClass({
 
     render: function() {
 
-        // if we have a chord_path, convert to chord
+        console.log('Rendering chord builder with state:');
+        console.log(this.state);
+
+        // if we only have a chord path, use that
         var chord;
-        if (this.props.chord_path){
+        if (this.props.chord_path && !this.state.result){
+          console.log("Builder - converting chord_path " + this.props.chord_path);
           chord = [this.chord_from_path(this.props.chord_path)];
         } else {
           chord = this.state.result;
         }
 
-        var buttonClass = "btn btn-default"
+        var buttonClass = "btn btn-default";
 
         return (
           <div className="row">
