@@ -177,11 +177,14 @@ var ChordBuilder = React.createClass({
 
         // if we only have a chord path, use that
         var chord;
+        var resultTitle;
         if (this.props.chord_path && !this.state.result){
           console.log("Builder - converting chord_path " + this.props.chord_path);
           chord = [this.chord_from_path(this.props.chord_path)];
+          resultTitle = chord[0].long_name();
         } else {
           chord = this.state.result;
+          resultTitle = this.state.resultTitle;
         }
 
         var buttonClass = "btn btn-default";
@@ -231,7 +234,7 @@ var ChordBuilder = React.createClass({
                   <FinderResults
                     app={this.props.app}
                     keyName={this.state.key}
-                    resultTitle={this.state.resultTitle}
+                    resultTitle={resultTitle}
                     result={chord} />
                 </div>
               </div>
