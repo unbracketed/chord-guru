@@ -30,18 +30,20 @@
   },
   "devDependencies": {
     "browserify": "~3.30.1",
-    "gulp": "~3.5.2",
+    "gulp": "^3.6.2",
     "gulp-browserify": "~0.4.6",
-    "gulp-watch": "~0.5.0",
-    "gulp-livereload": "~1.1.1",
-    "tiny-lr": "0.0.5",
-    "gulp-util": "~2.2.14",
-    "gulp-uglify": "~0.2.1",
-    "gulp-rename": "~1.2.0",
-    "reactify": "~0.7.0",
-    "gulp-sass": "~0.7.1",
     "gulp-clean": "~0.2.4",
     "gulp-jshint": "~1.5.1",
-    "jshint-stylish": "~0.1.5"
+    "gulp-livereload": "~1.1.1",
+    "gulp-rename": "~1.2.0",
+    "gulp-sass": "~0.7.1",
+    "gulp-uglify": "~0.2.1",
+    "gulp-util": "~2.2.14",
+    "gulp-watch": "~0.5.0",
+    "hoodie": "^0.8.2",
+    "hoodie-cli": "^0.4.10",
+    "jshint-stylish": "~0.1.5",
+    "reactify": "~0.7.0",
+    "tiny-lr": "0.0.5"
   }
 }
