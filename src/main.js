@@ -1,9 +1,9 @@
 /** @jsx React.DOM */
 'use strict';
 
-var $ = require('jquery');
+// var $ = require('jquery');
 var _ = require('underscore');
-var Backbone = require('backbone');
+// var Backbone = require('backbone');
 var React = require('react');
 
 var Button = require('react-bootstrap/cjs/Button');
@@ -19,7 +19,15 @@ var ChordBuilder = require('./chord_finder/views/builder');
 var CollectionDetailView = require('./collections/detailView');
 var ChordDiagram = require('./chords/diagram');
 
-Backbone.$ = $;
+// ---- FLUXIFY -----
+var Fluxxor = require('fluxxor');
+var ChordGuruStore = require('./stores/ChordGuruStore');
+var ChordGuruActions = require('./actions/ChordGuruActions');
+
+
+//-------------------
+
+// Backbone.$ = $;
 
 var ChordApp = React.createClass({
 
@@ -69,8 +77,8 @@ var ChordApp = React.createClass({
           console.log(err);
         });
 
-      console.log("Starting Backbone.history")
-      Backbone.history.start();
+      // console.log("Starting Backbone.history")
+      // Backbone.history.start();
     },
 
     chordFinderView: function(chord_path){
@@ -156,16 +164,16 @@ var ChordApp = React.createClass({
       return false;
     },
 
-    handleNavSelect: function(selectedKey){
-      if (selectedKey == 'nav-chord-finder'){
-        this.setState({activeView: 'chord-finder'});
-        Backbone.history.navigate('chord-finder');
-      } else if (selectedKey == 'nav-collections'){
-        this.setState({activeView: 'collections'});
-        Backbone.history.navigate('collections');
-      }
-      return false;
-    },
+    // handleNavSelect: function(selectedKey){
+    //   if (selectedKey == 'nav-chord-finder'){
+    //     this.setState({activeView: 'chord-finder'});
+    //     Backbone.history.navigate('chord-finder');
+    //   } else if (selectedKey == 'nav-collections'){
+    //     this.setState({activeView: 'collections'});
+      //     Backbone.history.navigate('collections');
+    //   }
+    //   return false;
+    // },
 
     foundChord: function(chord){
       console.log('foundChord');
@@ -260,12 +268,68 @@ var ChordApp = React.createClass({
     }
 });
 
+
+//-- FLUXIFY --
+
+var stores = {
+  ChordGuruStore: new ChordGuruStore()
+};
+
+
+var flux = new Fluxxor.Flux(stores, ChordGuruActions);
+var FluxMixin = Fluxxor.FluxMixin(React),
+    StoreWatchMixin = Fluxxor.StoreWatchMixin;
+
+var Application = React.createClass({
+  mixins: [FluxMixin, StoreWatchMixin("ChordGuruStore")],
+
+  getStateFromFlux: function() {
+    var flux = this.getFlux();
+    // Normally we'd use one key per store, but we only have one store, so
+    // we'll use the state of the store as our entire state here.
+    return flux.store("ChordGuruStore").getState();
+  },
+
+  render: function() {
+    var content = <div>Chord Guru Yo</div>;
+
+    return (
+        <div className="container">
+          <div id="header" className="row">
+            <div className="col-md-9 col-md-push-3">
+              <Nav bsStyle="pills" activeKey={'nav-' + this.state.current_view} onSelect={this.onClickNav}>
+                <NavItem key={'nav-chord-finder'}>Chord Finder</NavItem>
+                <NavItem key={'nav-progressions'}>Progressions</NavItem>
+                <NavItem key={'nav-collections'}>Collections</NavItem>
+              </Nav>
+            </div>
+            <div className="col-md-3 col-md-pull-9">
+              <h1>chord guru</h1>
+            </div>
+          </div>
+          {content}
+        </div>
+      );
+  },
+
+  onClickNav: function(section) {
+    this.getFlux().actions.navigationChange(section);
+  }
+
+});
+
+React.renderComponent(
+  <Application flux={flux}/>,
+  document.getElementById('main')
+);
+//----
+
 //TODO
 // barre chord rendering
 // starting fret label
 // chord label on top or bottom
 // improve muted and open string rendering
-
+// get rid of Backbone dependency
 // collection should contain instrument and tuning info
 
 // use crossing
@@ -274,7 +338,7 @@ var ChordApp = React.createClass({
 
 var hoodie  = new Hoodie();
 
-React.renderComponent(
-  <ChordApp/>,
-  document.getElementById('main')
-);
+// React.renderComponent(
+//   <ChordApp/>,
+//   document.getElementById('main')
+// );

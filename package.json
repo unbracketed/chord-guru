@@ -3,15 +3,17 @@
   "version": "1.0.10",
   "type": "app",
   "dependencies": {
-    "hoodie-server": "0.9.13",
+    "backbone": "~1.1.2",
+    "es6-promise": "^1.0.0",
+    "fluxxor": "^1.1.1",
     "hoodie-plugin-appconfig": "~0.1.0",
     "hoodie-plugin-email": "~0.1.1",
     "hoodie-plugin-users": "0.1.0",
+    "hoodie-server": "0.9.13",
+    "jquery": "~2.1.0",
     "react": "~0.9.0-rc1",
     "react-bootstrap": "~0.4.2",
-    "backbone": "~1.1.2",
-    "underscore": "~1.6.0",
-    "jquery": "~2.1.0"
+    "underscore": "~1.6.0"
   },
   "subdomain": "hoodie-chord-guru",
   "domains": [
