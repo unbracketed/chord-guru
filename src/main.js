@@ -297,10 +297,10 @@ var Application = React.createClass({
         <div className="container">
           <div id="header" className="row">
             <div className="col-md-9 col-md-push-3">
-              <Nav bsStyle="pills" activeKey={'nav-' + this.state.current_view} onSelect={this.onClickNav}>
-                <NavItem key={'nav-chord-finder'}>Chord Finder</NavItem>
-                <NavItem key={'nav-progressions'}>Progressions</NavItem>
-                <NavItem key={'nav-collections'}>Collections</NavItem>
+              <Nav bsStyle="pills" activeKey={this.state.current_view} onSelect={this.onClickNav}>
+                <NavItem key={'chord-finder'}>Chord Finder</NavItem>
+                <NavItem key={'progressions'}>Progressions</NavItem>
+                <NavItem key={'collections'}>Collections</NavItem>
               </Nav>
             </div>
             <div className="col-md-3 col-md-pull-9">
